@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>USD — Resident Journey Simulation</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root,html.light{--bg:#f8f9fb;--s1:#ffffff;--s2:#f1f3f5;--bd:#e2e5ea;--blue:#0168fa;--green:#10b981;--red:#ef4444;--amber:#f59e0b;--text:#1a1a2e;--t2:#5a6070;--t3:#8a8f9c;--hdr-bg:rgba(248,249,251,0.92);--intro-bg:#f8f9fb;--tl-ok-from:#93b4e8;--tl-bad-from:#f0a0a0;--reason-le-bg:rgba(100,116,139,0.08);--reason-le-c:#475569;--reason-le-bd:rgba(100,116,139,0.15);--reason-em-bg:rgba(100,116,139,0.06);--reason-em-c:#64748b;--reason-em-bd:rgba(100,116,139,0.15);--rec-ep-bg:rgba(148,163,184,0.08);--rec-ep-bd:rgba(148,163,184,0.2);--rec-usd-bg:rgba(1,104,250,0.06);--rec-usd-bd:rgba(1,104,250,0.18);--card-shadow:0 1px 4px rgba(0,0,0,0.04);--mono:'JetBrains Mono',monospace}
+html.dark{--bg:#0a0e1a;--s1:#111827;--s2:#1a2235;--bd:#1e293b;--blue:#0168fa;--green:#10b981;--red:#ef4444;--amber:#f59e0b;--text:#f1f5f9;--t2:#94a3b8;--t3:#64748b;--hdr-bg:rgba(10,14,26,0.92);--intro-bg:#0a0e1a;--tl-ok-from:#1e3a5f;--tl-bad-from:#5a2020;--reason-le-bg:rgba(148,163,184,0.08);--reason-le-c:var(--t2);--reason-le-bd:rgba(148,163,184,0.1);--reason-em-bg:rgba(148,163,184,0.06);--reason-em-c:var(--t3);--reason-em-bd:rgba(148,163,184,0.1);--rec-ep-bg:rgba(148,163,184,0.04);--rec-ep-bd:rgba(148,163,184,0.1);--rec-usd-bg:rgba(1,104,250,0.04);--rec-usd-bd:rgba(1,104,250,0.12);--card-shadow:none}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ===== HEADER SCOREBOARD ===== */
+.header{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--hdr-bg);backdrop-filter:blur(16px);border-bottom:1px solid var(--bd);padding:14px 48px}
+.header-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.header-title{font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--blue)}
+.controls{display:flex;gap:8px;align-items:center}
+.controls .lbl{font-size:9px;color:var(--t3);font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.controls button{background:var(--s1);border:1px solid var(--bd);color:var(--t2);padding:5px 12px;border-radius:6px;font-size:10px;font-weight:600;cursor:pointer;transition:all 0.2s}
+.controls button:hover{border-color:var(--blue);color:var(--blue)}
+.controls button.on{background:var(--blue);border-color:var(--blue);color:#fff}
+
+.scores{display:flex;gap:10px}
+.sc{flex:1;background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center}
+.sc-l{display:flex;flex-direction:column}
+.sc-lbl{font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3)}
+.sc-val{font-family:var(--mono);font-size:20px;font-weight:700;letter-spacing:-0.5px;margin-top:1px}
+.sc-sub{font-size:9px;color:var(--t3);margin-top:1px}
+.sc-badge{font-family:var(--mono);font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px}
+.sc.ep .sc-val{color:var(--t2)}
+.sc.usd .sc-val{color:var(--blue)}
+.sc.fee .sc-val{color:var(--green)}
+.sc.guar .sc-val{color:var(--amber)}
+.sc.diff .sc-val{color:var(--green)}
+
+.prog{height:2px;background:var(--s2);border-radius:1px;margin-top:8px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--green));width:0%;transition:width 0.5s}
+
+/* ===== CONTENT ===== */
+.content{max-width:920px;margin:0 auto;padding:140px 20px 80px}
+
+/* ===== INTRO ===== */
+.intro-screen{position:fixed;inset:0;z-index:200;background:var(--intro-bg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:opacity 1s}
+.intro-screen.hidden{opacity:0;pointer-events:none}
+.intro-logo{font-size:11px;font-weight:700;letter-spacing:6px;text-transform:uppercase;color:var(--blue);opacity:0;animation:fadeUp 0.8s 0.3s forwards}
+.intro-h1{font-size:48px;font-weight:900;letter-spacing:-2px;margin-top:16px;opacity:0;animation:fadeUp 0.8s 0.6s forwards}
+.intro-h1 span{background:linear-gradient(135deg,var(--blue),#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.intro-p{font-size:16px;color:var(--t2);margin-top:14px;max-width:560px;line-height:1.7;opacity:0;animation:fadeUp 0.8s 0.9s forwards}
+.intro-badge{display:inline-flex;align-items:center;gap:8px;background:var(--s1);border:1px solid var(--bd);border-radius:100px;padding:8px 20px;margin-top:24px;font-size:12px;color:var(--t2);opacity:0;animation:fadeUp 0.8s 1.2s forwards}
+.intro-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+.intro-btn{margin-top:40px;padding:14px 44px;background:var(--blue);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;opacity:0;animation:fadeUp 0.8s 1.5s forwards;transition:all 0.3s}
+.intro-btn:hover{box-shadow:0 8px 32px rgba(1,104,250,0.4);transform:translateY(-2px)}
+
+/* ===== ACCOUNT CARD ===== */
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:16px;margin-bottom:20px;padding:28px 32px;opacity:0;transition:opacity 0.8s ease}
+.card.show{opacity:1}
+.card{box-shadow:var(--card-shadow)}
+.card.highlight{box-shadow:0 0 40px rgba(1,104,250,0.1);border-color:rgba(1,104,250,0.25)}
+
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.card-left{}
+.card-name{font-size:20px;font-weight:800;letter-spacing:-0.5px}
+.card-meta{font-size:12px;color:var(--t2);margin-top:4px;display:flex;gap:16px}
+.card-meta span{display:flex;align-items:center;gap:4px}
+.card-right{text-align:right}
+.card-balance{font-family:var(--mono);font-size:28px;font-weight:800;letter-spacing:-1px}
+.card-balance-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);margin-top:2px}
+
+/* Reason */
+.reason{display:inline-block;font-size:11px;font-weight:700;letter-spacing:0.5px;padding:5px 14px;border-radius:8px;margin-bottom:16px}
+.reason.skip{background:rgba(239,68,68,0.1);color:#dc2626;border:1px solid rgba(239,68,68,0.25)}
+.reason.eviction{background:rgba(245,158,11,0.1);color:#d97706;border:1px solid rgba(245,158,11,0.25)}
+.reason.lease-break{background:rgba(245,158,11,0.08);color:#b45309;border:1px solid rgba(217,119,6,0.2)}
+.reason.lease-end{background:var(--reason-le-bg);color:var(--reason-le-c);border:1px solid var(--reason-le-bd)}
+.reason.early-move{background:var(--reason-em-bg);color:var(--reason-em-c);border:1px solid var(--reason-em-bd)}
+
+/* Timeline */
+.timeline{margin-bottom:20px}
+.tl-bar{height:28px;background:var(--s2);border-radius:8px;position:relative;overflow:hidden}
+.tl-fill{height:100%;border-radius:8px;position:absolute;left:0;top:0;transition:width 1.2s cubic-bezier(0.22,0.61,0.36,1)}
+.tl-fill.ok{background:linear-gradient(90deg,var(--tl-ok-from),#2563eb)}
+.tl-fill.bad{background:linear-gradient(90deg,var(--tl-bad-from),#dc2626)}
+.tl-text{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:600;color:#fff;z-index:1}
+.tl-pct{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;color:var(--t2);z-index:1}
+.tl-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--t3);margin-top:6px;font-weight:500}
+.tl-labels .mono{font-family:var(--mono);font-weight:600}
+
+/* Deposit status */
+.dep-row{display:flex;gap:12px;margin-bottom:16px}
+.dep-box{flex:1;background:var(--s2);border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+.dep-box .db-left{}
+.dep-box .db-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3)}
+.dep-box .db-value{font-family:var(--mono);font-size:18px;font-weight:700;margin-top:2px}
+.dep-box .db-sub{font-size:10px;color:var(--t3);margin-top:1px}
+.dep-box.obligation .db-value{color:var(--t2)}
+.dep-box.paid .db-value{color:var(--text)}
+.dep-box.paid .db-value.short{color:var(--amber)}
+.dep-box.paid .db-value.full{color:var(--green)}
+.dep-box.guarantee .db-value{color:var(--amber)}
+.dep-box.available .db-value{color:var(--blue)}
+.dep-bar-wrap{height:6px;background:var(--bd);border-radius:3px;overflow:hidden;margin-top:8px}
+.dep-bar-fill{height:100%;border-radius:3px;transition:width 1s ease}
+.dep-bar-fill.ok{background:var(--green)}
+.dep-bar-fill.partial{background:var(--amber)}
+
+/* Recovery boxes */
+.recovery{display:flex;gap:12px}
+.rec{flex:1;border-radius:12px;padding:16px 20px}
+.rec.ep{background:var(--rec-ep-bg);border:1px solid var(--rec-ep-bd)}
+.rec.usd{background:var(--rec-usd-bg);border:1px solid var(--rec-usd-bd)}
+.rec-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.rec-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+.rec.ep .rec-label{color:var(--t3)}
+.rec.usd .rec-label{color:var(--blue)}
+.rec-status{font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px}
+.rec-status.denied{background:rgba(239,68,68,0.1);color:var(--red)}
+.rec-status.paid{background:rgba(16,185,129,0.1);color:var(--green)}
+.rec-status.covered{background:rgba(1,104,250,0.1);color:var(--blue)}
+.rec-status.guaranteed{background:rgba(245,158,11,0.1);color:var(--amber)}
+.rec-amount{font-family:var(--mono);font-size:32px;font-weight:800;letter-spacing:-1px;margin-top:4px}
+.rec.ep .rec-amount{color:var(--t3)}
+.rec.usd .rec-amount{color:var(--blue)}
+.rec.usd .rec-amount.win{color:var(--green)}
+.rec-detail{font-size:11px;color:var(--t3);margin-top:6px;line-height:1.5}
+
+/* ===== SUMMARY ===== */
+.summary-card{background:var(--s1);border:1px solid var(--bd);border-radius:16px;padding:48px;text-align:center;margin-bottom:20px;opacity:0;transition:opacity 1s}
+.summary-card.show{opacity:1}
+.sum-eyebrow{font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--green);margin-bottom:16px}
+.sum-hero{font-family:var(--mono);font-size:64px;font-weight:900;letter-spacing:-3px;background:linear-gradient(135deg,var(--green),#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sum-sub{font-size:18px;color:var(--t2);margin-top:8px}
+.sum-sub strong{color:var(--text)}
+.sum-grid{display:flex;gap:14px;margin-top:32px}
+.sg{flex:1;background:var(--s2);border-radius:12px;padding:20px}
+.sg-num{font-family:var(--mono);font-size:28px;font-weight:800;letter-spacing:-1px}
+.sg-lbl{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);margin-top:4px}
+.sg-detail{font-size:11px;color:var(--t2);margin-top:8px;line-height:1.5}
+.sg.a .sg-num{color:var(--t2)}
+.sg.b .sg-num{color:var(--blue)}
+.sg.c .sg-num{color:var(--green)}
+.sum-note{font-size:13px;color:var(--t2);margin-top:28px;max-width:640px;margin-left:auto;margin-right:auto;line-height:1.7}
+.sum-note strong{color:var(--text)}
+.sum-foot{font-size:10px;color:var(--t3);margin-top:20px;padding-top:16px;border-top:1px solid var(--bd);max-width:580px;margin-left:auto;margin-right:auto;line-height:1.6}
+
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+</style>
+</head>
+<body>
+
+<!-- INTRO -->
+<div class="intro-screen" id="intro">
+  <img src="union-logo.png" alt="Union" style="height:36px;margin-bottom:4px;opacity:0;animation:fadeUp 0.8s 0.2s forwards">
+  <div class="intro-logo" style="margin-top:0">Union Security Deposit</div>
+  <h1 class="intro-h1">Resident <span>Journey</span></h1>
+  <p class="intro-p">82 real Sanctuary on 51st residents who went to collections. Each one tells a story. Watch what eDeposit covered — and what USD would have covered.</p>
+  <div class="intro-badge"><div class="dot"></div>Adjusted for installment timing + 50% guarantee</div>
+  <button class="intro-btn" onclick="launch()">Begin →</button>
+  <button id="themeToggleIntro" onclick="toggleTheme()" style="margin-top:16px;background:none;border:1px solid var(--bd);color:var(--t2);padding:8px 20px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;opacity:0;animation:fadeUp 0.8s 1.8s forwards">🌙 Dark</button>
+</div>
+
+<!-- HEADER -->
+<div class="header" id="header" style="opacity:0;transition:opacity 0.6s">
+  <div class="header-row">
+    <div class="header-title">● Resident Journey — Sanctuary on 51st</div>
+    <div class="controls">
+      <button id="themeToggle" onclick="toggleTheme()" style="margin-right:12px">🌙 Dark</button>
+      <button id="jumpEnd" onclick="jumpToEnd()">⏭ Skip to Summary</button>
+      <span class="lbl" style="margin-left:12px">Filter</span>
+      <button id="fAll" class="on" onclick="setFilter('all')">All (82)</button>
+      <button id="fEarly" onclick="setFilter('early')">Early Move-Outs</button>
+      <button id="fEpPaid" onclick="setFilter('ep-paid')">eDeposit Paid</button>
+      <button id="fEpDenied" onclick="setFilter('ep-denied')">eDeposit Denied</button>
+    </div>
+  </div>
+  <div class="scores">
+    <div class="sc" style="flex:0.8"><div class="sc-l"><div class="sc-lbl">Processed</div><div class="sc-val" id="sProc">0 / 82</div><div class="sc-sub" id="sDmg">$0 damages</div></div></div>
+    <div class="sc ep"><div class="sc-l"><div class="sc-lbl">eDeposit Recovered</div><div class="sc-val" id="sEp">$0</div><div class="sc-sub" id="sEpN">0 claims</div></div><div class="sc-badge" id="sEpR" style="background:rgba(148,163,184,0.08);color:var(--t3)">0%</div></div>
+    <div class="sc usd"><div class="sc-l"><div class="sc-lbl">USD Recovered</div><div class="sc-val" id="sUsd">$0</div><div class="sc-sub" id="sUsdN">0 deposits</div></div><div class="sc-badge" id="sUsdR" style="background:rgba(1,104,250,0.08);color:var(--blue)">0%</div></div>
+    <div class="sc fee"><div class="sc-l"><div class="sc-lbl">MT Revenue ($5/unit/mo)</div><div class="sc-val" id="sFee">$0</div><div class="sc-sub" id="sFeeSub">217 units enrolled</div></div></div>
+    <div class="sc guar"><div class="sc-l"><div class="sc-lbl">Union Guarantees Paid</div><div class="sc-val" id="sGuar">$0</div><div class="sc-sub" id="sGuarN">0 accounts</div></div><div class="sc-badge" id="sGuarR" style="background:rgba(245,158,11,0.08);color:var(--amber)">0</div></div>
+    <div class="sc diff"><div class="sc-l"><div class="sc-lbl">USD Advantage</div><div class="sc-val" id="sDiff">$0</div><div class="sc-sub" id="sDiffX">&nbsp;</div></div></div>
+  </div>
+  <div class="prog"><div class="prog-fill" id="pFill"></div></div>
+</div>
+
+<!-- CONTENT -->
+<div class="content" id="content" style="opacity:0;transition:opacity 0.6s"></div>
+
+<script>
+function jumpToEnd(){
+  // Reveal all cards and tally everything
+  document.querySelectorAll('.card').forEach(card=>{
+    card.classList.add('show');
+    const idx=parseInt(card.id.replace('c',''));
+    if(!isNaN(idx)&&idx<D.length&&!revealed.has(idx)){
+      revealed.add(idx);
+      const a=D[idx];
+      totBal+=a.bal;totEp+=a.ep;totUsd+=a.uc;
+      if(a.ep>0)epN++;if(a.uc>0)usdN++;
+      if(a.fd<a.av){totGuar+=a.av-a.fd;guarN++}
+      totFee+=Math.ceil(a.inst*0.175)*a.om;
+    }
+  });
+  updateScoreboard(D.length-1);
+  // Inject summary if not there
+  if(!document.getElementById('cSummary')){
+    document.getElementById('summarySlot').innerHTML=buildSummary();
+  }
+  setTimeout(()=>{
+    const sum=document.getElementById('cSummary');
+    if(sum){sum.classList.add('show');sum.scrollIntoView({behavior:'smooth'})}
+  },50);
+}
+
+function toggleTheme(){
+  const html=document.documentElement;
+  const isDark=html.classList.contains('dark');
+  html.classList.toggle('dark',!isDark);
+  html.classList.toggle('light',isDark);
+  const btn=document.getElementById('themeToggle');
+  const btn2=document.getElementById('themeToggleIntro');
+  if(!isDark){btn.textContent='☀️ Light';if(btn2)btn2.textContent='☀️ Light'}
+  else{btn.textContent='🌙 Dark';if(btn2)btn2.textContent='🌙 Dark'}
+}
+document.documentElement.classList.add('light');
+
+const D=[{"n":"T.","mi":"Jul '25","mo":"Sep '25","lm":13,"om":2,"bal":10150.39,"ep":0,"inst":69.23,"fd":138,"av":450,"uc":450,"r":"Early Move-Out"},{"n":"D.","mi":"Mar '25","mo":"Jul '25","lm":16,"om":4,"bal":179.65,"ep":0,"inst":56.25,"fd":225,"av":450,"uc":179.65,"r":"Early Move-Out"},{"n":"D.","mi":"Sep '25","mo":"Feb '26","lm":18,"om":5,"bal":8212.8,"ep":0,"inst":50.0,"fd":250,"av":450,"uc":450,"r":"Early Move-Out"},{"n":"T.","mi":"Dec '24","mo":"May '25","lm":18,"om":5,"bal":4111.5,"ep":0,"inst":50.0,"fd":250,"av":450,"uc":450,"r":"Early Move-Out"},{"n":"A.","mi":"Aug '25","mo":"Feb '26","lm":18,"om":5,"bal":7648.09,"ep":0,"inst":50.0,"fd":250,"av":450,"uc":450,"r":"Early Move-Out"},{"n":"S.","mi":"Nov '24","mo":"May '25","lm":12,"om":6,"bal":156.7,"ep":0,"inst":75.0,"fd":450,"av":450,"uc":156.7,"r":"Early Move-Out"},{"n":"N.","mi":"May '25","mo":"Oct '25","lm":13,"om":6,"bal":4284.06,"ep":140.0,"inst":69.23,"fd":415,"av":450,"uc":450,"r":"Early Move-Out"},{"n":"I.","mi":"Mar '25","mo":"Sep '25","lm":13,"om":6,"bal":163.1,"ep":0,"inst":69.23,"fd":415,"av":450,"uc":163.1,"r":"Early Move-Out"},{"n":"S.","mi":"Mar '25","mo":"Aug '25","lm":6,"om":6,"bal":297.59,"ep":0,"inst":150.0,"fd":900,"av":900,"uc":297.59,"r":"Lease End"},{"n":"S.","mi":"Mar '25","mo":"Aug '25","lm":6,"om":6,"bal":297.59,"ep":0,"inst":150.0,"fd":900,"av":900,"uc":297.59,"r":"Lease End"},{"n":"S.","mi":"Mar '25","mo":"Aug '25","lm":6,"om":6,"bal":486.59,"ep":360.0,"inst":150.0,"fd":900,"av":900,"uc":486.59,"r":"Lease End"},{"n":"B.","mi":"Jun '25","mo":"Dec '25","lm":18,"om":6,"bal":2791.99,"ep":0,"inst":50.0,"fd":300,"av":450,"uc":450,"r":"Early Move-Out"},{"n":"M.","mi":"Feb '25","mo":"Sep '25","lm":18,"om":7,"bal":8338.1,"ep":0,"inst":50.0,"fd":350,"av":450,"uc":450,"r":"Early Move-Out"},{"n":"S.","mi":"Dec '24","mo":"Jun '25","lm":18,"om":7,"bal":5192.21,"ep":0,"inst":50.0,"fd":350,"av":450,"uc":450,"r":"Early Move-Out"},{"n":"P.","mi":"Sep '24","mo":"Apr '25","lm":16,"om":7,"bal":110.82,"ep":100.0,"inst":56.25,"fd":394,"av":450,"uc":110.82,"r":"Early Move-Out"},{"n":"M.","mi":"Feb '25","mo":"Oct '25","lm":18,"om":8,"bal":1549.17,"ep":0,"inst":50.0,"fd":400,"av":450,"uc":450,"r":"Early Move-Out"},{"n":"G.","mi":"Aug '24","mo":"Apr '25","lm":7,"om":8,"bal":190.02,"ep":0,"inst":128.57,"fd":900,"av":900,"uc":190.02,"r":"Lease End"},{"n":"C.","mi":"Nov '24","mo":"Jul '25","lm":18,"om":8,"bal":446.8,"ep":0,"inst":50.0,"fd":400,"av":450,"uc":446.8,"r":"Early Move-Out"},{"n":"T.","mi":"Oct '24","mo":"Jul '25","lm":15,"om":9,"bal":4755.75,"ep":0,"inst":60.0,"fd":540,"av":540,"uc":540,"r":"Early Move-Out"},{"n":"I.","mi":"May '24","mo":"Mar '25","lm":9,"om":10,"bal":109.9,"ep":0,"inst":100.0,"fd":900,"av":900,"uc":109.9,"r":"Lease End"},{"n":"A.","mi":"Jul '24","mo":"May '25","lm":15,"om":10,"bal":14710.7,"ep":0,"inst":60.0,"fd":600,"av":600,"uc":600,"r":"Early Move-Out"},{"n":"A.","mi":"Feb '25","mo":"Jan '26","lm":14,"om":11,"bal":149.77,"ep":329.0,"inst":64.29,"fd":707,"av":707,"uc":149.77,"r":"Early Move-Out"},{"n":"C.","mi":"Jan '25","mo":"Dec '25","lm":14,"om":11,"bal":6427.82,"ep":425.0,"inst":64.29,"fd":707,"av":707,"uc":707,"r":"Early Move-Out"},{"n":"G.","mi":"May '24","mo":"Apr '25","lm":18,"om":11,"bal":246.53,"ep":0,"inst":50.0,"fd":550,"av":550,"uc":246.53,"r":"Early Move-Out"},{"n":"A.","mi":"Oct '24","mo":"Oct '25","lm":18,"om":12,"bal":6777.22,"ep":0,"inst":50.0,"fd":600,"av":600,"uc":600,"r":"Early Move-Out"},{"n":"S.","mi":"May '24","mo":"May '25","lm":12,"om":12,"bal":106.39,"ep":0,"inst":75.0,"fd":900,"av":900,"uc":106.39,"r":"Lease End"},{"n":"R.","mi":"May '24","mo":"May '25","lm":12,"om":12,"bal":1950.15,"ep":0,"inst":75.0,"fd":900,"av":900,"uc":900,"r":"Lease End"},{"n":"E.","mi":"Nov '24","mo":"Dec '25","lm":12,"om":13,"bal":7739.9,"ep":0,"inst":75.0,"fd":900,"av":900,"uc":900,"r":"Lease End"},{"n":"S.","mi":"Dec '24","mo":"Dec '25","lm":13,"om":13,"bal":395.51,"ep":50.0,"inst":69.23,"fd":900,"av":900,"uc":395.51,"r":"Lease End"},{"n":"K.","mi":"Mar '24","mo":"Apr '25","lm":13,"om":13,"bal":128.6,"ep":0,"inst":69.23,"fd":900,"av":900,"uc":128.6,"r":"Lease End"},{"n":"M.","mi":"Feb '24","mo":"Mar '25","lm":13,"om":13,"bal":190.91,"ep":0,"inst":69.23,"fd":900,"av":900,"uc":190.91,"r":"Lease End"},{"n":"A.","mi":"Dec '24","mo":"Jan '26","lm":12,"om":13,"bal":177.06,"ep":0,"inst":75.0,"fd":900,"av":900,"uc":177.06,"r":"Lease End"},{"n":"N.","mi":"Dec '24","mo":"Feb '26","lm":18,"om":14,"bal":4086.62,"ep":155.0,"inst":50.0,"fd":700,"av":700,"uc":700,"r":"Early Move-Out"},{"n":"N.","mi":"Jan '24","mo":"Feb '25","lm":13,"om":14,"bal":158.66,"ep":230.0,"inst":69.23,"fd":900,"av":900,"uc":158.66,"r":"Lease End"},{"n":"A.","mi":"Jul '24","mo":"Sep '25","lm":14,"om":14,"bal":336.0,"ep":0,"inst":64.29,"fd":900,"av":900,"uc":336.0,"r":"Lease End"},{"n":"J.","mi":"Jul '24","mo":"Sep '25","lm":13,"om":14,"bal":301.6,"ep":0,"inst":69.23,"fd":900,"av":900,"uc":301.6,"r":"Lease End"},{"n":"A.","mi":"Apr '24","mo":"Jun '25","lm":14,"om":14,"bal":68.81,"ep":324.0,"inst":64.29,"fd":900,"av":900,"uc":68.81,"r":"Lease End"},{"n":"T.","mi":"Dec '24","mo":"Feb '26","lm":18,"om":14,"bal":4512.46,"ep":0,"inst":50.0,"fd":700,"av":700,"uc":700,"r":"Early Move-Out"},{"n":"I.","mi":"Jun '24","mo":"Sep '25","lm":15,"om":15,"bal":352.85,"ep":0,"inst":60.0,"fd":900,"av":900,"uc":352.85,"r":"Lease End"},{"n":"S.","mi":"Mar '24","mo":"Jun '25","lm":15,"om":15,"bal":409.8,"ep":360.0,"inst":60.0,"fd":900,"av":900,"uc":409.8,"r":"Lease End"},{"n":"B.","mi":"Mar '24","mo":"Jun '25","lm":15,"om":15,"bal":777.79,"ep":0,"inst":60.0,"fd":900,"av":900,"uc":777.79,"r":"Lease End"},{"n":"T.","mi":"Nov '23","mo":"Mar '25","lm":15,"om":15,"bal":75.69,"ep":0,"inst":60.0,"fd":900,"av":900,"uc":75.69,"r":"Lease End"},{"n":"D.","mi":"Nov '23","mo":"Feb '25","lm":15,"om":15,"bal":140.02,"ep":0,"inst":60.0,"fd":900,"av":900,"uc":140.02,"r":"Lease End"},{"n":"S.","mi":"Apr '24","mo":"Jul '25","lm":15,"om":16,"bal":181.52,"ep":230.0,"inst":60.0,"fd":900,"av":900,"uc":181.52,"r":"Lease End"},{"n":"S.","mi":"Oct '23","mo":"Feb '25","lm":16,"om":16,"bal":60.4,"ep":0,"inst":56.25,"fd":900,"av":900,"uc":60.4,"r":"Lease End"},{"n":"D.","mi":"Nov '23","mo":"Mar '25","lm":16,"om":16,"bal":281.56,"ep":0,"inst":56.25,"fd":900,"av":900,"uc":281.56,"r":"Lease End"},{"n":"N.","mi":"Mar '24","mo":"Jul '25","lm":18,"om":16,"bal":3967.79,"ep":0,"inst":50.0,"fd":800,"av":800,"uc":800,"r":"Early Move-Out"},{"n":"N.","mi":"Apr '24","mo":"Sep '25","lm":18,"om":17,"bal":263.07,"ep":175.0,"inst":50.0,"fd":850,"av":850,"uc":263.07,"r":"Lease End"},{"n":"S.","mi":"Nov '23","mo":"Apr '25","lm":17,"om":17,"bal":173.53,"ep":274.0,"inst":52.94,"fd":900,"av":900,"uc":173.53,"r":"Lease End"},{"n":"Z.","mi":"Apr '24","mo":"Sep '25","lm":18,"om":17,"bal":5956.2,"ep":0,"inst":50.0,"fd":850,"av":850,"uc":850,"r":"Lease End"},{"n":"J.","mi":"Nov '23","mo":"May '25","lm":18,"om":18,"bal":176.35,"ep":0,"inst":50.0,"fd":900,"av":900,"uc":176.35,"r":"Lease End"},{"n":"D.","mi":"Feb '24","mo":"Aug '25","lm":18,"om":18,"bal":218.35,"ep":315.0,"inst":50.0,"fd":900,"av":900,"uc":218.35,"r":"Lease End"},{"n":"B.","mi":"Feb '24","mo":"Jul '25","lm":15,"om":18,"bal":389.29,"ep":609.63,"inst":60.0,"fd":900,"av":900,"uc":389.29,"r":"Lease End"},{"n":"G.","mi":"Aug '23","mo":"Feb '25","lm":18,"om":18,"bal":99.53,"ep":190.0,"inst":50.0,"fd":900,"av":900,"uc":99.53,"r":"Lease End"},{"n":"B.","mi":"Nov '23","mo":"May '25","lm":18,"om":18,"bal":205.46,"ep":0,"inst":50.0,"fd":900,"av":900,"uc":205.46,"r":"Lease End"},{"n":"R.","mi":"Mar '24","mo":"Sep '25","lm":18,"om":18,"bal":213.44,"ep":0,"inst":50.0,"fd":900,"av":900,"uc":213.44,"r":"Lease End"},{"n":"T.","mi":"Mar '24","mo":"Sep '25","lm":18,"om":18,"bal":320.93,"ep":0,"inst":50.0,"fd":900,"av":900,"uc":320.93,"r":"Lease End"},{"n":"N.","mi":"May '24","mo":"Nov '25","lm":18,"om":18,"bal":656.49,"ep":0,"inst":50.0,"fd":900,"av":900,"uc":656.49,"r":"Lease End"},{"n":"K.","mi":"May '24","mo":"Nov '25","lm":18,"om":18,"bal":2788.67,"ep":360.0,"inst":50.0,"fd":900,"av":900,"uc":900,"r":"Lease End"},{"n":"C.","mi":"Oct '23","mo":"Apr '25","lm":18,"om":18,"bal":100.2,"ep":0,"inst":50.0,"fd":900,"av":900,"uc":100.2,"r":"Lease End"},{"n":"J.","mi":"Mar '24","mo":"Sep '25","lm":18,"om":18,"bal":191.38,"ep":0,"inst":50.0,"fd":900,"av":900,"uc":191.38,"r":"Lease End"},{"n":"S.","mi":"Feb '24","mo":"Aug '25","lm":17,"om":18,"bal":482.59,"ep":360.0,"inst":52.94,"fd":900,"av":900,"uc":482.59,"r":"Lease End"},{"n":"K.","mi":"Feb '24","mo":"Aug '25","lm":18,"om":19,"bal":210.07,"ep":0,"inst":50.0,"fd":900,"av":900,"uc":210.07,"r":"Lease End"},{"n":"T.","mi":"Jan '24","mo":"Jul '25","lm":18,"om":19,"bal":332.65,"ep":360.0,"inst":50.0,"fd":900,"av":900,"uc":332.65,"r":"Lease End"},{"n":"J.","mi":"Dec '23","mo":"Jun '25","lm":18,"om":19,"bal":4961.86,"ep":0,"inst":50.0,"fd":900,"av":900,"uc":900,"r":"Lease End"},{"n":"J.","mi":"Mar '24","mo":"Oct '25","lm":18,"om":19,"bal":217.06,"ep":0,"inst":50.0,"fd":900,"av":900,"uc":217.06,"r":"Lease End"},{"n":"A.","mi":"Apr '24","mo":"Dec '25","lm":15,"om":19,"bal":109.45,"ep":74.0,"inst":60.0,"fd":900,"av":900,"uc":109.45,"r":"Lease End"},{"n":"S.","mi":"Sep '23","mo":"May '25","lm":18,"om":20,"bal":12814.3,"ep":0,"inst":50.0,"fd":900,"av":900,"uc":900,"r":"Lease End"},{"n":"D.","mi":"Sep '23","mo":"Jun '25","lm":18,"om":21,"bal":9350.09,"ep":0,"inst":50.0,"fd":900,"av":900,"uc":900,"r":"Lease End"},{"n":"P.","mi":"Jun '23","mo":"Mar '25","lm":18,"om":22,"bal":164.86,"ep":130.0,"inst":50.0,"fd":900,"av":900,"uc":164.86,"r":"Lease End"},{"n":"D.","mi":"Apr '23","mo":"May '25","lm":18,"om":25,"bal":10495.52,"ep":0,"inst":50.0,"fd":900,"av":900,"uc":900,"r":"Lease End"},{"n":"R.","mi":"Jul '23","mo":"Sep '25","lm":18,"om":25,"bal":4999.96,"ep":0,"inst":50.0,"fd":900,"av":900,"uc":900,"r":"Lease End"},{"n":"J.","mi":"Mar '23","mo":"May '25","lm":18,"om":26,"bal":3139.1,"ep":0,"inst":50.0,"fd":900,"av":900,"uc":900,"r":"Lease End"},{"n":"G.","mi":"May '23","mo":"Aug '25","lm":18,"om":27,"bal":1786.91,"ep":0,"inst":50.0,"fd":900,"av":900,"uc":900,"r":"Lease End"},{"n":"G.","mi":"Nov '23","mo":"Jan '26","lm":18,"om":27,"bal":276.8,"ep":164.0,"inst":50.0,"fd":900,"av":900,"uc":276.8,"r":"Lease End"},{"n":"E.","mi":"Jun '23","mo":"Sep '25","lm":18,"om":27,"bal":634.92,"ep":0,"inst":50.0,"fd":900,"av":900,"uc":634.92,"r":"Lease End"},{"n":"Y.","mi":"Jun '23","mo":"Sep '25","lm":18,"om":27,"bal":462.16,"ep":0,"inst":50.0,"fd":900,"av":900,"uc":462.16,"r":"Lease End"},{"n":"S.","mi":"Aug '23","mo":"Nov '25","lm":18,"om":28,"bal":319.59,"ep":205.0,"inst":50.0,"fd":900,"av":900,"uc":319.59,"r":"Lease End"},{"n":"A.","mi":"May '23","mo":"Sep '25","lm":18,"om":28,"bal":7629.07,"ep":0,"inst":50.0,"fd":900,"av":900,"uc":900,"r":"Lease End"},{"n":"F.","mi":"May '23","mo":"Oct '25","lm":18,"om":29,"bal":11000.63,"ep":0,"inst":50.0,"fd":900,"av":900,"uc":900,"r":"Lease End"},{"n":"K.","mi":"Mar '23","mo":"Oct '25","lm":18,"om":31,"bal":133.32,"ep":0,"inst":50.0,"fd":900,"av":900,"uc":133.32,"r":"Lease End"},{"n":"A.","mi":"Mar '23","mo":"Nov '25","lm":18,"om":33,"bal":343.16,"ep":0,"inst":50.0,"fd":900,"av":900,"uc":343.16,"r":"Lease End"}];
+
+const fmt=n=>'$'+Math.round(n).toLocaleString();
+let totEp=0,totUsd=0,totBal=0,epN=0,usdN=0,totGuar=0,guarN=0,totFee=0,revealed=new Set();
+
+function rc(r){if(r==='Early Skip')return'skip';if(r==='Eviction')return'eviction';if(r==='Lease Break')return'lease-break';if(r==='Lease End')return'lease-end';return'early-move'}
+
+function usdStatus(a){
+  if(a.fd>=900)return{t:'Deposit Funded',c:'covered'};
+  if(a.av===450&&a.fd<450)return{t:'50% Guarantee',c:'guaranteed'};
+  return{t:a.om+'mo funded',c:'covered'};
+}
+
+function buildCard(a,i){
+  const pct=Math.min(100,Math.round(a.om/a.lm*100));
+  const us=usdStatus(a);
+  const epSt=a.ep>0?{t:'Claim Paid',c:'paid'}:{t:'Denied',c:'denied'};
+  const win=a.uc>a.ep;
+  
+  return `<div class="card ${rc(a.r)}" id="c${i}">
+    <div class="card-top">
+      <div class="card-left">
+        <div class="card-name">Resident ${a.n} <span style="font-size:13px;font-weight:500;color:var(--t3);margin-left:6px">#${i+1} of 82</span></div>
+        <div class="card-meta">
+          <span>📅 ${a.mi} → ${a.mo}</span>
+          <span>📋 ${a.om} of ${a.lm} month lease</span>
+          <span>💰 $${a.inst}/mo + $${Math.ceil(a.inst*0.175)} fee</span>
+        </div>
+      </div>
+      <div class="card-right">
+        <div class="card-balance">${fmt(a.bal)}</div>
+        <div class="card-balance-lbl">Total Owed</div>
+      </div>
+    </div>
+    <span class="reason ${rc(a.r)}">${a.r}${a.e?' — '+a.om+' months into '+a.lm+'-month lease':''}</span>
+    <div class="timeline">
+      <div class="tl-bar">
+        <div class="tl-fill ${a.e&&pct<85?'bad':'ok'}" style="width:${pct}%"></div>
+        <div class="tl-text">${a.mi}</div>
+        <div class="tl-pct">${pct}% of lease</div>
+      </div>
+      <div class="tl-labels">
+        <span>Deposit funded: <span class="mono">${fmt(a.fd)}</span> of $900${a.fd<900&&a.av>a.fd?' → Guarantee: <span class="mono">'+fmt(a.av)+'</span>':''}</span>
+        <span class="mono">${a.mo}</span>
+      </div>
+    </div>
+    <div class="dep-row">
+      <div class="dep-box obligation"><div class="db-left"><div class="db-label">Deposit Obligation</div><div class="db-value">$900</div><div class="db-sub">${a.lm}-month lease · ${fmt(a.inst)}/mo</div></div></div>
+      <div class="dep-box paid"><div class="db-left"><div class="db-label">Deposit Paid</div><div class="db-value ${a.fd>=900?'full':'short'}">${fmt(a.fd)}</div><div class="db-sub">${a.fd>=900?'Fully funded':a.om+' payments of '+fmt(a.inst)}</div></div></div>
+      ${a.fd<a.av?`<div class="dep-box guarantee"><div class="db-left"><div class="db-label">Union Guarantee</div><div class="db-value">${fmt(450-a.fd)}</div><div class="db-sub">Tops up to 50% ($450)</div></div></div>`:''}
+      <div class="dep-box available"><div class="db-left"><div class="db-label">Available to Property</div><div class="db-value">${fmt(a.av)}</div><div class="db-sub">${a.fd>=900?'Full deposit on hand':a.fd<a.av?'Guarantee > paid':'Funded amount'}</div></div>
+        <div style="width:80px"><div class="dep-bar-wrap"><div class="dep-bar-fill ${a.av>=900?'ok':'partial'}" style="width:${Math.round(a.av/900*100)}%"></div></div></div>
+      </div>
+    </div>
+    <div class="recovery">
+      <div class="rec ep">
+        <div class="rec-header"><span class="rec-label">eDeposit</span><span class="rec-status ${epSt.c}">${epSt.t}</span></div>
+        <div class="rec-amount">${a.ep>0?fmt(a.ep):'$0'}</div>
+        <div class="rec-detail">${a.ep>0?fmt(a.ep)+' covered — remaining '+fmt(a.bal-a.ep)+' sent to collections':'Claim denied — full '+fmt(a.bal)+' sent to collections'}</div>
+      </div>
+      <div class="rec usd">
+        <div class="rec-header"><span class="rec-label">USD</span><span class="rec-status ${us.c}">${us.t}</span></div>
+        <div class="rec-amount ${win?'win':''}">${fmt(a.uc)}</div>
+        <div class="rec-detail">${a.uc>=a.bal?'Deposit covers full balance — zero collections needed':fmt(a.uc)+' captured at move-out — '+fmt(Math.max(0,a.bal-a.uc))+' to collections'}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function buildSummary(){
+  return `<div class="summary-card" id="cSummary">
+    <div class="sum-eyebrow">Simulation Complete</div>
+    <div class="sum-hero">+${fmt(totUsd-totEp)}</div>
+    <div class="sum-sub">USD recovers <strong>${(totUsd/totEp).toFixed(1)}× more</strong> in damage coverage</div>
+    <div class="sum-grid">
+      <div class="sg a"><div class="sg-num">${fmt(totEp)}</div><div class="sg-lbl">eDeposit Total</div><div class="sg-detail">${epN} of 82 claims paid<br>${82-epN} denied ($0 recovery)</div></div>
+      <div class="sg b"><div class="sg-num">${fmt(totUsd)}</div><div class="sg-lbl">USD Total (Adjusted)</div><div class="sg-detail">Installment timing honored<br>50% guarantee on early skips</div></div>
+      <div class="sg c"><div class="sg-num">+${fmt(totUsd-totEp)}</div><div class="sg-lbl">USD Advantage</div><div class="sg-detail">On damage recovery alone<br>Before $13,020/yr rev share</div></div>
+    </div>
+    <div class="sum-note"><strong>This is the conservative number.</strong> Every early move-out uses actual deposit funded or the 50% guarantee — whichever is higher. Full deposit of $900 only counted for completed leases. Even with this adjustment, USD recovers ${(totUsd/totEp).toFixed(1)}× more than eDeposit.</div>
+    <div class="sum-foot">All data from Mark-Taylor. April 2024 – March 2026.</div>
+  </div>`;
+}
+
+function updateScoreboard(i){
+  document.getElementById('sProc').textContent=revealed.size+' / '+totalFiltered;
+  document.getElementById('sDmg').textContent=fmt(totBal)+' in damages';
+  document.getElementById('sEp').textContent=fmt(totEp);
+  document.getElementById('sEpN').textContent=epN+' claims';
+  document.getElementById('sEpR').textContent=totBal>0?Math.round(totEp/totBal*100)+'%':'0%';
+  document.getElementById('sUsd').textContent=fmt(totUsd);
+  document.getElementById('sUsdN').textContent=usdN+' deposits';
+  document.getElementById('sUsdR').textContent=totBal>0?Math.round(totUsd/totBal*100)+'%':'0%';
+  const mtRev=Array.from(revealed).reduce((sum,i)=>{const a=D[i];return sum+5*a.om},0);
+  document.getElementById('sFee').textContent=fmt(mtRev);
+  document.getElementById('sFeeSub').textContent=revealed.size+' residents × $5/mo';
+  document.getElementById('sGuar').textContent=fmt(totGuar);
+  document.getElementById('sGuarN').textContent=guarN+' accounts';
+  document.getElementById('sGuarR').textContent=guarN;
+  document.getElementById('sDiff').textContent='+'+fmt(totUsd-totEp);
+  document.getElementById('sDiffX').textContent=totEp>0?(totUsd/totEp).toFixed(1)+'× more':'—';
+  document.getElementById('pFill').style.width=Math.round((i+1)/82*100)+'%';
+}
+
+let activeFilter='all';
+let filtered=[];
+
+function passesFilter(a){
+  if(activeFilter==='early')return a.r==='Early Move-Out';
+  if(activeFilter==='ep-paid')return a.ep>0;
+  if(activeFilter==='ep-denied')return a.ep===0;
+  return true;
+}
+
+function setFilter(f){
+  activeFilter=f;
+  document.querySelectorAll('.controls button').forEach(b=>b.classList.remove('on'));
+  document.getElementById(f==='all'?'fAll':f==='early'?'fEarly':f==='ep-paid'?'fEpPaid':'fEpDenied').classList.add('on');
+  renderCards();
+}
+
+function updateFilterCounts(){
+  const earlyN=D.filter(a=>a.r==='Early Move-Out').length;
+  const epPaidN=D.filter(a=>a.ep>0).length;
+  document.getElementById('fAll').textContent='All ('+D.length+')';
+  document.getElementById('fEarly').textContent='Early Move-Outs ('+earlyN+')';
+  const epDeniedN=D.filter(a=>a.ep===0).length;
+  document.getElementById('fEpPaid').textContent='eDeposit Paid ('+epPaidN+')';
+  document.getElementById('fEpDenied').textContent='eDeposit Denied ('+epDeniedN+')';
+}
+
+function renderCards(){
+  filtered=D.map((a,i)=>({...a,origIdx:i})).filter(x=>passesFilter(x));
+  const content=document.getElementById('content');
+  
+  // Reset totals
+  totEp=0;totUsd=0;totBal=0;epN=0;usdN=0;totGuar=0;guarN=0;totFee=0;revealed=new Set();
+  
+  let html='';
+  filtered.forEach((a,fi)=>html+=buildCard(a,a.origIdx));
+  content.innerHTML=html+'<div id="summarySlot"></div>';
+  
+  // Update scoreboard total count
+  totalFiltered=filtered.length;
+  
+  window.scrollTo(0,0);
+  setTimeout(onScroll,50);
+}
+
+let totalFiltered=82;
+
+function launch(){
+  document.getElementById('intro').classList.add('hidden');
+  document.getElementById('header').style.opacity='1';
+  const content=document.getElementById('content');
+  content.style.opacity='1';
+  
+  updateFilterCounts();
+  renderCards();
+  window.addEventListener('scroll',onScroll,{passive:true});
+}
+
+function onScroll(){
+  const vpH=window.innerHeight;
+  const cards=document.querySelectorAll('.card');
+  cards.forEach(card=>{
+    const rect=card.getBoundingClientRect();
+    if(rect.top<vpH*0.85&&!card.classList.contains('show')){
+      card.classList.add('show');
+      const idx=parseInt(card.id.replace('c',''));
+      if(!isNaN(idx)&&idx<D.length&&!revealed.has(idx)){
+        revealed.add(idx);
+        const a=D[idx];
+        totBal+=a.bal;totEp+=a.ep;totUsd+=a.uc;
+        if(a.ep>0)epN++;if(a.uc>0)usdN++;
+        if(a.fd<a.av){totGuar+=a.av-a.fd;guarN++}
+        totFee+=Math.ceil(a.inst*0.175)*a.om;
+        updateScoreboard(idx);
+      }
+    }
+  });
+  
+  // Add summary once all filtered cards revealed
+  if(revealed.size>=totalFiltered&&!document.getElementById('cSummary')){
+    document.getElementById('summarySlot').innerHTML=buildSummary();
+  }
+  const sum=document.getElementById('cSummary');
+  if(sum){
+    const rect=sum.getBoundingClientRect();
+    if(rect.top<vpH*0.85)sum.classList.add('show');
+  }
+}
+
+// Keyboard
+document.addEventListener('keydown',e=>{
+  if(e.key===' '||e.key==='Enter'){
+    if(!document.getElementById('intro').classList.contains('hidden')){e.preventDefault();launch()}
+  }
+});
+</script>
+</body>
+</html>

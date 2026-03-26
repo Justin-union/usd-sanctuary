@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>USD — Guarantee Model</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',-apple-system,sans-serif;background:#f8f9fb;color:#1a1a2e;min-height:100vh}
+.page{max-width:1060px;margin:0 auto;padding:40px 28px 80px}
+
+.header{display:flex;align-items:center;gap:14px;margin-bottom:4px}
+.header img{height:32px}
+.header h1{font-size:22px;font-weight:800;letter-spacing:-0.5px}
+.subtitle{font-size:11px;color:#8a8f9c;margin-bottom:36px}
+
+h2{font-size:13px;font-weight:700;color:#0168fa;text-transform:uppercase;letter-spacing:2px;margin:32px 0 14px;padding-bottom:6px;border-bottom:2px solid #e2e5ea}
+h3{font-size:12px;font-weight:700;margin-bottom:8px}
+
+.card{background:#fff;border:1px solid #e2e5ea;border-radius:12px;padding:20px 24px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.card.green{border-left:4px solid #10b981}
+.card.amber{border-left:4px solid #f59e0b}
+.card.red{border-left:4px solid #ef4444}
+.card.blue{border-left:4px solid #0168fa}
+
+.mono{font-family:'JetBrains Mono',monospace;font-weight:600}
+.green{color:#10b981}.red{color:#ef4444}.amber{color:#d97706}.blue{color:#0168fa}.gray{color:#8a8f9c}
+.quiet{color:#8a8f9c;font-size:11px}
+
+/* Controls */
+.controls{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:8px}
+.control{grid-column:span 2}
+.control:nth-child(4),.control:nth-child(5){grid-column:span 3}
+.control{background:#fff;border:1px solid #e2e5ea;border-radius:12px;padding:18px 22px;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.control label{display:block;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#8a8f9c;margin-bottom:6px}
+.control .val-row{display:flex;align-items:center;gap:12px}
+.control input[type=range]{flex:1;accent-color:#0168fa;height:6px}
+.control .val{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:800;color:#1a1a2e;min-width:70px;text-align:right}
+.control .val.sm{font-size:16px}
+.control .unit{font-size:11px;color:#8a8f9c;font-weight:600}
+.control .note{font-size:10px;color:#8a8f9c;margin-top:4px}
+
+/* Preset buttons */
+.presets{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+.presets button{background:#fff;border:1px solid #e2e5ea;color:#5a6070;padding:7px 16px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.2s}
+.presets button:hover{border-color:#0168fa;color:#0168fa}
+.presets button.active{background:#0168fa;color:#fff;border-color:#0168fa}
+
+/* Results */
+.results{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}
+.result{background:#fff;border:1px solid #e2e5ea;border-radius:12px;padding:22px 18px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.result .r-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#8a8f9c;margin-bottom:6px}
+.result .r-num{font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:900;letter-spacing:-1px}
+.result .r-sub{font-size:11px;color:#8a8f9c;margin-top:4px;line-height:1.4}
+
+/* Guarantee bar */
+.bar-section{margin:20px 0}
+.bar-labels{display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:#8a8f9c;margin-bottom:6px}
+.bar-track{height:36px;background:#f1f3f5;border-radius:8px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:8px;display:flex;align-items:center;padding-left:14px;font-size:11px;font-weight:700;color:#fff;transition:width 0.6s ease}
+.bar-fill.guar{background:linear-gradient(90deg,#f59e0b,#fbbf24)}
+.bar-fill.deposit{background:linear-gradient(90deg,#10b981,#34d399)}
+
+/* Scenario table */
+table{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0}
+th{text-align:left;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#8a8f9c;padding:8px 10px;border-bottom:2px solid #e2e5ea}
+th.r{text-align:right}
+td{padding:8px 10px;border-bottom:1px solid #f1f3f5}
+td.r{text-align:right}
+tfoot td{font-weight:800;border-top:2px solid #e2e5ea;padding:12px 10px}
+
+.row{display:flex;gap:14px}.row>*{flex:1}
+
+.highlight-box{border-radius:10px;padding:14px 18px;margin:14px 0;font-size:13px;line-height:1.6}
+.highlight-box.green{background:#ecfdf5;border:1px solid #a7f3d0}
+.highlight-box.amber{background:#fffbeb;border:1px solid #fde68a}
+
+.foot{text-align:center;font-size:10px;color:#8a8f9c;margin-top:40px;line-height:1.6}
+
+/* Pool sensitivity table */
+.pool-header{font-size:16px;font-weight:800;letter-spacing:-0.3px;margin-bottom:4px}
+.pool-legend{font-size:11px;color:#8a8f9c;margin-bottom:14px}
+.pool-controls{display:flex;gap:20px;margin-bottom:18px}
+.pc{display:flex;align-items:center;gap:8px}
+.pc label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#8a8f9c;white-space:nowrap}
+.pc input[type=range]{width:120px;accent-color:#0168fa}
+.pc-val{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;min-width:40px}
+
+.pool-table{width:100%;border-collapse:collapse;font-size:12px;font-family:'JetBrains Mono',monospace}
+.pool-table th{font-size:10px;font-weight:700;letter-spacing:1px;color:#8a8f9c;padding:8px 6px;text-align:right;border-bottom:2px solid #e2e5ea;white-space:nowrap}
+.pool-table th:first-child{text-align:left;width:60px}
+.pool-table td{padding:6px 6px;text-align:right;border-bottom:1px solid #f1f3f5;font-size:11px;font-weight:600;white-space:nowrap}
+.pool-table td:first-child{text-align:left;font-weight:700;color:#1a1a2e;background:#f8f9fb}
+.pool-table td.pos{background:#d1fae5;color:#065f46}
+.pool-table td.neg{background:#fee2e2;color:#991b1b}
+.pool-table td.zero{background:#fef3c7;color:#92400e}
+.pool-table tr:hover td{opacity:0.85}
+
+.be-table{margin-top:6px}
+.be-table td{text-align:center;font-size:14px;font-weight:800;color:#0168fa;background:#eff6ff}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="header">
+  <img src="union-logo.png" alt="Union">
+  <h1>USD Guarantee Model</h1>
+</div>
+<div class="subtitle">Adjust the inputs below to model guarantee exposure under different scenarios</div>
+
+<!-- ========== PRESETS ========== -->
+<div class="presets">
+  <button class="active" onclick="applyPreset('sanctuary')">Sanctuary Actual</button>
+  <button onclick="applyPreset('conservative')">Conservative</button>
+  <button onclick="applyPreset('stressed')">Stress Test</button>
+  <button onclick="applyPreset('portfolio')">Full Portfolio (5K units)</button>
+</div>
+
+<!-- ========== CONTROLS ========== -->
+<h2>Model Inputs</h2>
+<div class="controls">
+  <div class="control">
+    <label>Total Units Enrolled</label>
+    <div class="val-row">
+      <input type="range" id="slUnits" min="50" max="10000" step="10" value="217">
+      <div class="val" id="vUnits">217</div>
+      <div class="unit">units</div>
+    </div>
+  </div>
+  <div class="control">
+    <label>Deposit Amount</label>
+    <div class="val-row">
+      <input type="range" id="slDeposit" min="300" max="2000" step="50" value="1350">
+      <div class="val" id="vDeposit">$900</div>
+    </div>
+  </div>
+  <div class="control">
+    <label>Average Lease Term</label>
+    <div class="val-row">
+      <input type="range" id="slLease" min="6" max="24" step="1" value="14">
+      <div class="val sm" id="vLease">14</div>
+      <div class="unit">months</div>
+    </div>
+    <div class="note">Sanctuary weighted avg: 14 months</div>
+  </div>
+  <div class="control">
+    <label>Early Move-Out with Damages</label>
+    <div class="val-row">
+      <input type="range" id="slSkipRate" min="1" max="40" step="1" value="16">
+      <div class="val sm" id="vSkipRate">16%</div>
+    </div>
+    <div class="note">Sanctuary actual: 16% (worst-case property)</div>
+  </div>
+  <div class="control">
+    <label>Average Month of Early Departure</label>
+    <div class="val-row">
+      <input type="range" id="slSkipMonth" min="1" max="18" step="1" value="6">
+      <div class="val sm" id="vSkipMonth">6</div>
+      <div class="unit">months</div>
+    </div>
+    <div class="note">Sanctuary actual: ~6 months avg for skips/evictions</div>
+  </div>
+
+  <input type="hidden" id="slAdopt" value="100">
+  <!-- Fee auto-calculated: ceil(installment * 0.175) - $5 property cut -->
+</div>
+
+<!-- ========== RESULTS ========== -->
+<h2>Model Results</h2>
+<div class="results">
+  <div class="result">
+    <div class="r-label">Early Departures</div>
+    <div class="r-num blue" id="rSkips">35</div>
+    <div class="r-sub" id="rSkipsSub">of 217 residents/yr</div>
+  </div>
+  <div class="result">
+    <div class="r-label">Guarantee Triggered</div>
+    <div class="r-num amber" id="rTriggered">35</div>
+    <div class="r-sub" id="rTriggeredSub">departures needing top-up</div>
+  </div>
+  <div class="result">
+    <div class="r-label">Total Guarantee Exposure</div>
+    <div class="r-num amber" id="rGuarantee">$1,713</div>
+    <div class="r-sub">Union pays this amount/yr</div>
+  </div>
+  <div class="result">
+    <div class="r-label">Guarantee per Resident</div>
+    <div class="r-num" id="rPerResident" style="color:#5a6070">$21</div>
+    <div class="r-sub">averaged across ALL enrolled</div>
+  </div>
+</div>
+
+<!-- Deposit funded vs guarantee bar -->
+<div class="card">
+  <h3>What the resident funded vs what Union covers</h3>
+  <p class="quiet" style="margin-bottom:14px">For an average early departure at month <span id="barMonth">6</span> of a <span id="barLease">14</span>-month lease:</p>
+  <div class="row">
+    <div>
+      <div class="bar-labels"><span>Deposit funded by resident</span><span id="barFundedAmt">$386</span></div>
+      <div class="bar-track"><div class="bar-fill deposit" id="barFunded" style="width:43%"></div></div>
+    </div>
+    <div>
+      <div class="bar-labels"><span>Guarantee (Union top-up)</span><span id="barGuarAmt">$64</span></div>
+      <div class="bar-track"><div class="bar-fill guar" id="barGuar" style="width:7%"></div></div>
+    </div>
+  </div>
+  <p class="quiet" style="margin-top:10px">Total available to property: <strong class="mono" id="barTotal">$450</strong> (50% guarantee floor)</p>
+</div>
+
+<!-- Value comparison -->
+<div class="row">
+  <div class="card green">
+    <h3>Deposit Protection (Annual)</h3>
+    <table>
+      <tr><td>Forfeited deposits from early departures</td><td class="r mono green" id="rDeposits">$13,475</td></tr>
+      <tr><td>Deposits from normal move-outs (est. 10% damages)</td><td class="r mono" id="rNormalDeposits">—</td></tr>
+      <tr><td>Total deposits available to property</td><td class="r mono green" style="font-size:16px" id="rTotalDeposits">$13,475</td></tr>
+    </table>
+  </div>
+  <div class="card amber">
+    <h3>Guarantee Cost to Union (Annual)</h3>
+    <table>
+      <tr><td>Number of guarantees triggered</td><td class="r mono" id="rTriggered2">35</td></tr>
+      <tr><td>Average guarantee per triggered account</td><td class="r mono" id="rAvgGuar">$49</td></tr>
+      <tr><td>Total guarantee exposure</td><td class="r mono amber" style="font-size:16px" id="rGuarantee2">$1,713</td></tr>
+    </table>
+  </div>
+</div>
+
+
+
+
+
+<!-- ========== MAX EXPOSURE CALLOUT ========== -->
+<div class="row" style="margin-bottom:14px">
+  <div class="card" style="border-left:4px solid #f59e0b;flex:0 0 auto">
+    <h3 style="margin:0">Max Exposure per Skip</h3>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:900;color:#d97706;margin:6px 0" id="maxExposure">$450</div>
+    <div class="quiet">50% of <span id="maxExpDeposit">$900</span> deposit — only if resident leaves month 1</div>
+  </div>
+  <div class="card" style="border-left:4px solid #0168fa;flex:1">
+    <h3 style="margin:0">Enrolled Units</h3>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:900;color:#0168fa" id="enrolledUnits">217</div>
+    <div class="quiet">Total units on USD</div>
+  </div>
+  <div class="card" style="border-left:4px solid #10b981;flex:1">
+    <h3 style="margin:0">Monthly Payment</h3>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:900;color:#10b981" id="monthlyPayment">$75.71</div>
+    <div class="quiet"><span id="mpInstallment">$64.29</span> deposit + <span id="mpFee">$12</span> fee (17.5%)</div>
+  </div>
+</div>
+
+<!-- ========== UNIT ECONOMICS PER RENTER ========== -->
+<h2>Unit Economics per Renter</h2>
+
+<div class="card blue" style="margin-bottom:24px">
+<p class="quiet" style="margin-bottom:10px">How each resident impacts the pool — completers generate profit, early departures may trigger guarantee. After month <span id="zeroMonth">9</span>, the guarantee is $0.</p>
+<div style="overflow-x:auto">
+  <table class="pool-table" id="unitEconTable">
+    <thead>
+      <tr>
+        <th style="text-align:left">Scenario</th>
+        <th class="r">Months</th>
+        <th class="r">Collected</th>
+        <th class="r">Deposit Funded</th>
+        <th class="r">Fee Revenue</th>
+        <th class="r">Operator Cut ($5)</th>
+        <th class="r">Net to Pool</th>
+        <th class="r">Guarantee Payout</th>
+        <th class="r">Pool Impact</th>
+      </tr>
+    </thead>
+    <tbody id="unitEconBody"></tbody>
+  </table>
+</div>
+</div>
+
+<!-- ========== NET POOL POSITION SENSITIVITY ========== -->
+<h2>Net Pool Position — Sensitivity Analysis</h2>
+<div class="pool-header" id="poolHeader">
+  <span id="poolUnits2">217</span> Units | 50% Guarantee | $<span id="poolDep">900</span> Deposit
+</div>
+<div class="pool-legend">
+  Each cell = annual net pool position. <span style="color:#10b981;font-weight:700">Green = profitable</span> · <span style="color:#ef4444;font-weight:700">Red = loss</span>
+</div>
+
+<div style="overflow-x:auto;margin-bottom:14px">
+  <table class="pool-table" id="poolTable">
+    <thead><tr id="poolHead"></tr></thead>
+    <tbody id="poolBody"></tbody>
+  </table>
+</div>
+
+<div class="pool-header" style="font-size:14px;margin-top:24px">Break-Even Skip Rate by Month</div>
+<div class="pool-legend">Maximum skip rate before the pool goes negative at each average skip month</div>
+<div style="overflow-x:auto">
+  <table class="pool-table be-table">
+    <thead><tr id="beHead"></tr></thead>
+    <tbody><tr id="beBody"></tr></tbody>
+  </table>
+</div>
+
+
+
+<div class="foot">
+  Interactive model — adjust sliders to test different scenarios.<br>
+  Guarantee = 50% of deposit minus installments already paid. Reaches $0 as resident payments exceed the 50% floor.<br>
+  Net Pool = Annual fee revenue collected − annual guarantee payouts.
+</div>
+
+</div>
+
+<script>
+const ids = ['slUnits','slDeposit','slLease','slSkipRate','slSkipMonth'];
+const sliders = {};
+ids.forEach(id => { sliders[id] = document.getElementById(id); });
+
+const presets = {
+  sanctuary: { units:217, deposit:1350, lease:14, skipRate:16, skipMonth:6, damages:2400, adopt:100 },
+  conservative: { units:217, deposit:1350, lease:14, skipRate:10, skipMonth:7, damages:1800, adopt:100 },
+  stressed: { units:217, deposit:1350, lease:12, skipRate:25, skipMonth:4, damages:3500, adopt:100 },
+  portfolio: { units:5000, deposit:1350, lease:14, skipRate:10, skipMonth:7, damages:2000, adopt:100 }
+};
+
+function applyPreset(name) {
+  const p = presets[name];
+  sliders.slUnits.value = p.units;
+  sliders.slDeposit.value = p.deposit;
+  sliders.slLease.value = p.lease;
+  sliders.slSkipRate.value = p.skipRate;
+  sliders.slSkipMonth.value = p.skipMonth;
+
+  document.getElementById('slAdopt').value = p.adopt;
+  document.querySelectorAll('.presets button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  calcAll();
+}
+
+function fmt(n) {
+  return '$' + Math.round(n).toLocaleString();
+}
+
+function calc() {
+  const units = +sliders.slUnits.value;
+  const deposit = +sliders.slDeposit.value;
+  const lease = +sliders.slLease.value;
+  const skipRate = +sliders.slSkipRate.value;
+  const skipMonth = +sliders.slSkipMonth.value;
+  // Display values
+  document.getElementById('vUnits').textContent = units.toLocaleString();
+  document.getElementById('vDeposit').textContent = fmt(deposit);
+  document.getElementById('vLease').textContent = lease;
+  document.getElementById('vSkipRate').textContent = skipRate + '%';
+  document.getElementById('vSkipMonth').textContent = skipMonth;
+
+  const installment = deposit / lease;
+  const guaranteeFloor = deposit * 0.5;
+  const skips = Math.round(units * skipRate / 100);
+  const funded = Math.min(installment * skipMonth, deposit);
+  const guarPerSkip = Math.max(0, guaranteeFloor - funded);
+  const triggered = guarPerSkip > 0 ? skips : 0;
+  const totalGuar = guarPerSkip * skips;
+  const perResident = totalGuar / units;
+
+  // Deposits from early departures (forfeited)
+  const depositsFromSkips = funded * skips;
+
+  // Results
+  document.getElementById('rSkips').textContent = skips;
+  document.getElementById('rSkipsSub').textContent = `of ${units.toLocaleString()} residents/yr`;
+  document.getElementById('rTriggered').textContent = triggered;
+  document.getElementById('rTriggeredSub').textContent = guarPerSkip > 0 ? 'departures needing top-up' : 'guarantee not needed at this month';
+  document.getElementById('rGuarantee').textContent = fmt(totalGuar);
+  document.getElementById('rPerResident').textContent = fmt(perResident);
+
+  // Bar visualization
+  document.getElementById('barMonth').textContent = skipMonth;
+  document.getElementById('barLease').textContent = lease;
+  const fundedPct = (funded / deposit) * 100;
+  const guarPct = (guarPerSkip / deposit) * 100;
+  document.getElementById('barFunded').style.width = fundedPct + '%';
+  document.getElementById('barFundedAmt').textContent = fmt(funded);
+  document.getElementById('barGuar').style.width = Math.max(guarPct, 0) + '%';
+  document.getElementById('barGuarAmt').textContent = fmt(guarPerSkip);
+  document.getElementById('barTotal').textContent = fmt(Math.max(funded, guaranteeFloor));
+
+  // Value cards
+  document.getElementById('rDeposits').textContent = fmt(depositsFromSkips);
+  document.getElementById('rTotalDeposits').textContent = fmt(depositsFromSkips);
+  document.getElementById('rNormalDeposits').textContent = '—';
+  document.getElementById('rTriggered2').textContent = triggered;
+  document.getElementById('rAvgGuar').textContent = triggered > 0 ? fmt(totalGuar / triggered) : '$0';
+  document.getElementById('rGuarantee2').textContent = fmt(totalGuar);
+
+
+
+}
+
+// Removed old standalone bindings — calcAll handles everything
+
+// ========== UNIT ECONOMICS + CALLOUTS ==========
+function calcUnitEcon() {
+  const units = +sliders.slUnits.value;
+  const deposit = +sliders.slDeposit.value;
+  const lease = +sliders.slLease.value;
+  const adopt = +document.getElementById('slAdopt').value / 100;
+  const guaranteeFloor = deposit * 0.5;
+  const installment = deposit / lease;
+  const fee = Math.ceil(installment * 0.175);
+  const unionFee = fee - 5; // $5/unit/month to property
+  const monthlyTotal = installment + fee;
+  const operatorCut = 5;
+  const enrolled = Math.round(units * adopt);
+
+  // Max exposure callout
+  document.getElementById('maxExposure').textContent = '$' + Math.round(guaranteeFloor).toLocaleString();
+  document.getElementById('maxExpDeposit').textContent = '$' + deposit.toLocaleString();
+  document.getElementById('enrolledUnits').textContent = enrolled.toLocaleString();
+  document.getElementById('monthlyPayment').textContent = '$' + monthlyTotal.toFixed(2);
+  document.getElementById('mpInstallment').textContent = '$' + installment.toFixed(2);
+  document.getElementById('mpFee').textContent = '$' + fee;
+
+  // Unit economics table
+  const tbody = document.getElementById('unitEconBody');
+  tbody.innerHTML = '';
+
+  // Completer row
+  const compCollected = monthlyTotal * lease;
+  const compDeposit = deposit;
+  const compFee = fee * lease;
+  const compOperator = operatorCut * lease;
+  const compNetPool = compFee - compOperator;
+  const compGuar = 0;
+  const compImpact = compNetPool - compGuar;
+
+  let html = `<tr style="background:#ecfdf5">
+    <td style="text-align:left;font-weight:700;color:#065f46">Completer (full ${lease} mo)</td>
+    <td class="r mono">${lease}</td>
+    <td class="r mono">$${Math.round(compCollected).toLocaleString()}</td>
+    <td class="r mono">$${Math.round(compDeposit).toLocaleString()}</td>
+    <td class="r mono">$${Math.round(compFee).toLocaleString()}</td>
+    <td class="r mono">$${Math.round(compOperator).toLocaleString()}</td>
+    <td class="r mono" style="color:#10b981">$${Math.round(compNetPool).toLocaleString()}</td>
+    <td class="r mono">$0</td>
+    <td class="r mono" style="color:#10b981;font-weight:800">+$${Math.round(compImpact).toLocaleString()}</td>
+  </tr>`;
+
+  // Skip rows for months 2 through lease-1
+  for (let m = 2; m <= Math.min(lease - 1, 12); m++) {
+    const collected = monthlyTotal * m;
+    const funded = Math.min(installment * m, deposit);
+    const feeRev = fee * m;
+    const opCut = operatorCut * m;
+    const netPool = feeRev - opCut;
+    const guar = Math.max(0, guaranteeFloor - funded);
+    const impact = netPool - guar;
+    const isNeg = impact < 0;
+
+    html += `<tr${isNeg ? ' style="background:#fef2f2"' : ''}>
+      <td style="text-align:left;font-weight:600${isNeg ? ';color:#991b1b' : ''}">Skip @ Month ${m}</td>
+      <td class="r mono">${m}</td>
+      <td class="r mono">$${Math.round(collected).toLocaleString()}</td>
+      <td class="r mono">$${Math.round(funded).toLocaleString()}</td>
+      <td class="r mono">$${Math.round(feeRev).toLocaleString()}</td>
+      <td class="r mono">$${Math.round(opCut).toLocaleString()}</td>
+      <td class="r mono">$${Math.round(netPool).toLocaleString()}</td>
+      <td class="r mono" style="color:${guar > 0 ? '#d97706' : '#10b981'}">$${Math.round(guar).toLocaleString()}</td>
+      <td class="r mono" style="color:${isNeg ? '#ef4444' : '#10b981'};font-weight:800">${isNeg ? '-' : '+'}$${Math.abs(Math.round(impact)).toLocaleString()}</td>
+    </tr>`;
+  }
+
+  tbody.innerHTML = html;
+
+  // Find month where guarantee hits $0
+  for (let m = 1; m <= lease; m++) {
+    const f = Math.min(installment * m, deposit);
+    if (f >= deposit * 0.5) {
+      document.getElementById('zeroMonth').textContent = m;
+      break;
+    }
+  }
+}
+
+// ========== NET POOL POSITION SENSITIVITY ==========
+function calcPool() {
+  const units = +sliders.slUnits.value;
+  const deposit = +sliders.slDeposit.value;
+  const lease = +sliders.slLease.value;
+  const adopt = +document.getElementById('slAdopt').value / 100;
+  const installmentRaw = deposit / lease;
+  const totalFee = Math.ceil(installmentRaw * 0.175);
+  const feePerUnit = totalFee - 5; // minus $5 property cut
+  const guaranteeFloor = deposit * 0.5;
+  const installment = deposit / lease;
+  const enrolled = Math.round(units * adopt);
+
+  // adopt is always 100% — units slider = enrolled units
+  document.getElementById('poolDep').textContent = deposit.toLocaleString();
+  document.getElementById('poolUnits2').textContent = units.toLocaleString();
+
+  const months = [];
+  for (let m = 2; m <= Math.min(lease, 14); m++) months.push(m);
+
+  // Header
+  const thead = document.getElementById('poolHead');
+  thead.innerHTML = '<th>Skip %</th>' + months.map(m => `<th>Mo ${m}</th>`).join('');
+
+  // Body
+  const tbody = document.getElementById('poolBody');
+  tbody.innerHTML = '';
+
+  const breakEvens = {};
+  months.forEach(m => { breakEvens[m] = '30%+'; });
+
+  for (let sr = 0; sr <= 30; sr++) {
+    const tr = document.createElement('tr');
+    let rowHtml = `<td>${sr}%</td>`;
+
+    months.forEach(m => {
+      const skipCount = Math.round(enrolled * sr / 100);
+      const normalCount = enrolled - skipCount;
+      // Normal residents pay full 12 months of fees
+      const normalRev = normalCount * feePerUnit * 12;
+      // Skip residents pay fees until they leave
+      const skipRev = skipCount * feePerUnit * m;
+      const totalRev = normalRev + skipRev;
+
+      // Guarantee cost
+      const funded = Math.min(installment * m, deposit);
+      const guarPer = Math.max(0, guaranteeFloor - funded);
+      const totalGuar = skipCount * guarPer;
+
+      const net = totalRev - totalGuar;
+
+      let cls = 'pos';
+      if (net < 0) {
+        cls = 'neg';
+        if (breakEvens[m] === '30%+' || parseInt(breakEvens[m]) >= sr) {
+          breakEvens[m] = (sr - 1) + '%';
+        }
+      } else if (net < 500) {
+        cls = 'zero';
+      }
+
+      const formatted = net < 0
+        ? '-$' + Math.abs(Math.round(net)).toLocaleString()
+        : '$' + Math.round(net).toLocaleString();
+
+      rowHtml += `<td class="${cls}">${formatted}</td>`;
+    });
+
+    tr.innerHTML = rowHtml;
+    tbody.appendChild(tr);
+  }
+
+  // Break-even row
+  const beHead = document.getElementById('beHead');
+  beHead.innerHTML = months.map(m => `<th>Mo ${m}</th>`).join('');
+  const beBody = document.getElementById('beBody');
+  beBody.innerHTML = months.map(m => `<td>${breakEvens[m]}</td>`).join('');
+
+}
+
+function calcAll() { calc(); calcUnitEcon(); calcPool(); }
+document.getElementById('slAdopt').addEventListener('input', calcAll);
+ids.forEach(id => {
+  sliders[id].addEventListener('input', () => {
+    document.querySelectorAll('.presets button').forEach(b => b.classList.remove('active'));
+    calcAll();
+  });
+});
+calcAll();
+</script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>USD vs eDeposit — Sanctuary Results</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#f8f9fb;color:#1a1a2e;padding:24px 32px;max-width:960px;margin:0 auto;font-size:13px;line-height:1.6}
+h1{font-size:20px;font-weight:800;margin-bottom:4px}
+.subtitle{font-size:11px;color:#8a8f9c;margin-bottom:24px}
+h2{font-size:14px;font-weight:700;color:#0168fa;text-transform:uppercase;letter-spacing:2px;margin:28px 0 12px;padding-bottom:6px;border-bottom:2px solid #e2e5ea}
+h3{font-size:12px;font-weight:700;margin:14px 0 6px;color:#1a1a2e}
+.card{background:#fff;border:1px solid #e2e5ea;border-radius:10px;padding:16px 20px;margin-bottom:12px}
+.card.warn{border-left:4px solid #f59e0b}
+.card.danger{border-left:4px solid #ef4444}
+.card.good{border-left:4px solid #10b981}
+.card.info{border-left:4px solid #0168fa}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+th{text-align:left;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#8a8f9c;padding:6px 10px;border-bottom:2px solid #e2e5ea}
+td{padding:6px 10px;border-bottom:1px solid #f1f3f5;vertical-align:top}
+.mono{font-family:'JetBrains Mono',monospace;font-weight:600}
+.red{color:#ef4444}.green{color:#10b981}.blue{color:#0168fa}.amber{color:#d97706}.gray{color:#8a8f9c}
+.tag{display:inline-block;font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:0.5px}
+.tag.red{background:rgba(239,68,68,.1);color:#dc2626}
+.tag.green{background:rgba(16,185,129,.1);color:#059669}
+.tag.amber{background:rgba(245,158,11,.1);color:#d97706}
+ul{margin:4px 0 4px 20px}li{margin:3px 0}
+.quiet{color:#8a8f9c;font-size:11px}
+.row{display:flex;gap:12px}.row>*{flex:1}
+hr{border:none;border-top:1px solid #e2e5ea;margin:24px 0}
+.highlight-box{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:12px 16px;margin:12px 0;font-size:12px}
+.highlight-box.green{background:#ecfdf5;border-color:#a7f3d0}
+</style>
+</head>
+<body>
+
+<div style="display:flex;align-items:center;gap:14px;margin-bottom:4px">
+  <img src="union-logo.png" alt="Union" style="height:32px">
+  <h1 style="margin:0">USD vs eDeposit — Sanctuary Results</h1>
+</div>
+<div class="subtitle">Sanctuary on 51st · 217 Units Enrolled · Data: Pay Ready Collections + Mark-Taylor Accounting</div>
+
+<!-- ========== HEAD TO HEAD ========== -->
+<h2>Damage Recovery Comparison</h2>
+
+<div class="row">
+  <div class="card danger">
+    <h3>eDeposit (Current)</h3>
+    <table>
+      <tr><td>Total damages</td><td class="mono">$201,772</td></tr>
+      <tr><td>eDeposit claims paid</td><td class="mono amber">$5,920</td><td class="quiet">23 of 83 paid</td></tr>
+      <tr><td>Collections (Pay Ready)</td><td class="mono">$22,902</td></tr>
+      <tr style="border-top:2px solid #e2e5ea"><td><strong>Total recovered</strong></td><td class="mono">$28,872</td><td><span class="tag amber">14.3%</span></td></tr>
+      <tr><td><strong>Unrecovered</strong></td><td class="mono red">$172,900</td><td class="quiet">85.7% lost</td></tr>
+    </table>
+  </div>
+  <div class="card good">
+    <h3>USD (Dan's Model)</h3>
+    <table>
+      <tr><td>Total damages</td><td class="mono">$201,772</td></tr>
+      <tr><td>Forfeited deposits</td><td class="mono blue">$44,514</td><td class="quiet">83 accounts</td></tr>
+      <tr><td>Collections (Pay Ready)</td><td class="mono">$12,545</td></tr>
+      <tr style="border-top:2px solid #e2e5ea"><td><strong>Total recovered</strong></td><td class="mono green">$57,058</td><td><span class="tag green">28.3%</span></td></tr>
+      <tr><td><strong>Unrecovered</strong></td><td class="mono">$144,713</td><td class="quiet">71.7% lost</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="highlight-box green">
+  <strong>USD advantage: +$28,186 more recovered</strong> — 2.0× what eDeposit recovered. Recovery rate doubles from 14.3% → 28.3%.
+</div>
+
+<div class="row">
+  <div class="card" style="border-left:4px solid #8a8f9c">
+    <h3>eDeposit — Total Value to Property</h3>
+    <table>
+      <tr><td>eDeposit claims paid (damage recovery)</td><td class="mono">$5,920</td></tr>
+      <tr><td>Collections to property (60% of $22,902)</td><td class="mono">$13,741</td></tr>
+      <tr><td>eDeposit Withdrawal (this year)</td><td class="mono">$22,001</td></tr>
+      <tr style="border-top:2px solid #e2e5ea"><td><strong>Total value to property</strong></td><td class="mono" style="font-size:18px">$41,662</td></tr>
+    </table>
+  </div>
+  <div class="card" style="border-left:4px solid #10b981">
+    <h3>USD — Total Value to Property</h3>
+    <table>
+      <tr><td>Forfeited deposits (damage recovery)</td><td class="mono green">$44,514</td></tr>
+      <tr><td>Collections to property (60% of $12,545)</td><td class="mono">$7,527</td></tr>
+      <tr><td>% of $5/unit revenue share</td><td class="mono gray">—</td></tr>
+      <tr style="border-top:2px solid #e2e5ea"><td><strong>Total value to property</strong></td><td class="mono green" style="font-size:18px">$52,041</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="row">
+  <div class="card" style="border-left:4px solid #8a8f9c">
+    <h3>eDeposit — Total Value to Mark-Taylor</h3>
+    <table>
+      <tr><td>5% fee on the pool</td><td class="mono">$2,256/yr</td></tr>
+      <tr style="border-top:2px solid #e2e5ea"><td><strong>Total value to Mark-Taylor</strong></td><td class="mono" style="font-size:18px">$2,256/yr</td></tr>
+    </table>
+  </div>
+  <div class="card" style="border-left:4px solid #10b981">
+    <h3>USD — Total Value to Mark-Taylor</h3>
+    <table>
+      <tr><td>$5/unit/month revenue share (217 units)</td><td class="mono green">$13,020/yr</td></tr>
+      <tr style="border-top:2px solid #e2e5ea"><td><strong>Total value to Mark-Taylor</strong></td><td class="mono green" style="font-size:18px">$13,020/yr</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="highlight-box green">
+  <strong>USD delivers 5.8× more revenue to Mark-Taylor:</strong> $13,020/yr vs $2,256/yr. Plus better deposit protection for the property.
+</div>
+
+<hr>
+
+<!-- ========== THE COLLECTIONS INSIGHT ========== -->
+<h2>Collections Insight</h2>
+
+<div class="card good">
+<h3>USD Eliminates Collections on 53 of 83 Accounts</h3>
+<table>
+  <tr><th>Scenario</th><th>Accounts Needing Collections</th><th>Amount Sent to Collections</th></tr>
+  <tr><td>eDeposit</td><td class="mono">82 of 83</td><td class="mono">$195,802</td></tr>
+  <tr><td>USD</td><td class="mono green">30 of 83</td><td class="mono">$157,258</td></tr>
+</table>
+<p style="margin-top:10px"><strong>53 accounts</strong> ($17,514 in damages) are <strong>fully covered by the forfeited deposit alone</strong> — zero collections needed. These are the small-balance accounts where $900 (or the actual balance) wipes the debt clean.</p>
+</div>
+
+<div class="card warn">
+<h3>Why USD Collections Amount is LOWER</h3>
+<p>Under eDeposit, Pay Ready collects <strong>$22,902</strong>. Under USD, they'd only collect <strong>$12,545</strong>. That's <span class="mono red">-$10,357</span> less in collections.</p>
+<p style="margin-top:8px"><strong>Why?</strong> Two reasons:</p>
+<ul>
+  <li><strong>53 accounts eliminated</strong> — deposit covers them, so Pay Ready never sees them. Many of these were small balances with HIGH recovery rates (68-83%). Pay Ready loses easy wins.</li>
+  <li><strong>Remaining 30 accounts have lower remaining balances</strong> — $900 already applied, so there's less to collect on. But these are the BIG balances ($5K-$14K) with low recovery rates (3-16%) anyway.</li>
+</ul>
+</div>
+
+<p class="quiet" style="text-align:center;margin-top:24px">Sanctuary on 51st · 217 Units · 83 Collections Accounts Analyzed</p>
+
+</body>
+</html>
