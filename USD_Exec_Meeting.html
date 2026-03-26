@@ -19,7 +19,6 @@ h2{font-size:44px;font-weight:800;line-height:1.12;letter-spacing:-1.5px;color:#
 .sub{font-size:20px;font-weight:400;color:#64748b;line-height:1.6;margin-top:14px;max-width:720px}
 .blue{color:#0168fa}.green{color:#16a34a}.red{color:#dc2626}.muted{color:#94a3b8}.amber{color:#d97706}
 
-/* Cards */
 .cards{display:flex;gap:20px;margin-top:28px}
 .card{flex:1;padding:28px;border-radius:16px;background:#f8fafc;border:1px solid #e2e8f0}
 .card.pop{border:2px solid #0168fa;background:#fff;box-shadow:0 4px 20px rgba(1,104,250,0.08)}
@@ -29,26 +28,20 @@ h2{font-size:44px;font-weight:800;line-height:1.12;letter-spacing:-1.5px;color:#
 .card p{font-size:16px;line-height:1.65;color:#475569}
 .card h3{font-size:16px;font-weight:700;margin-bottom:8px}
 
-/* Stats */
 .stats{display:flex;gap:56px;margin-top:40px}
 .sn-big{font-size:60px;font-weight:900;letter-spacing:-2px;line-height:1}
 .sn-lbl{font-size:13px;font-weight:600;color:#94a3b8;margin-top:8px;text-transform:uppercase;letter-spacing:1.5px}
 
-/* Bars */
 .bar-row{display:flex;align-items:center;gap:14px;margin-bottom:14px}
 .bar-lbl{width:180px;font-size:14px;font-weight:600;color:#64748b;text-align:right;flex-shrink:0}
 .bar-track{flex:1;height:42px;background:#f1f5f9;border-radius:10px;overflow:hidden}
 .bar-fill{height:100%;border-radius:10px;display:flex;align-items:center;padding-left:16px;font-size:15px;font-weight:700;color:#fff;min-width:60px;transition:width 1s ease}
-.bar-fill.gr{background:#94a3b8}.bar-fill.bl{background:#0168fa}.bar-fill.gn{background:#16a34a}.bar-fill.rd{background:#dc2626}
+.bar-fill.bl{background:#0168fa}.bar-fill.gn{background:#16a34a}.bar-fill.rd{background:#dc2626}.bar-fill.gr{background:#94a3b8}
 
-/* VS layout */
 .vs-row{display:flex;align-items:stretch;gap:24px}
 .vs-box{flex:1;padding:28px;border-radius:16px;text-align:center}
-.vs-box.dim{background:#f8fafc;border:1px solid #e2e8f0}
-.vs-box.pop{background:#eff6ff;border:2px solid #0168fa}
 .vs-dot{width:52px;height:52px;border-radius:50%;background:#f1f5f9;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#94a3b8;flex-shrink:0;align-self:center}
 
-/* Table */
 .dtable{width:100%;border-collapse:collapse;font-size:16px}
 .dtable th{text-align:left;padding:10px 16px;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#94a3b8;border-bottom:2px solid #e2e8f0}
 .dtable td{padding:10px 16px;border-bottom:1px solid #f1f5f9;color:#475569}
@@ -57,38 +50,32 @@ h2{font-size:44px;font-weight:800;line-height:1.12;letter-spacing:-1.5px;color:#
 .dtable td.g{color:#16a34a}.dtable td.r{color:#dc2626}.dtable td.b{color:#0168fa}
 
 /* Agenda */
-.agenda{list-style:none;counter-reset:ag}
-.agenda li{counter-increment:ag;display:flex;align-items:center;gap:20px;padding:16px 0;border-bottom:1px solid #f1f5f9;font-size:18px;color:#475569}
+.agenda{list-style:none;counter-reset:ag;max-width:820px}
+.agenda li{counter-increment:ag;display:flex;align-items:center;gap:24px;padding:20px 0;border-bottom:1px solid #f1f5f9}
 .agenda li:last-child{border-bottom:none}
-.agenda li::before{content:counter(ag);width:44px;height:44px;border-radius:12px;background:#eff6ff;color:#0168fa;font-size:17px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.agenda .tag{font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;letter-spacing:0.5px;margin-left:auto;flex-shrink:0}
-.agenda .tag.data{background:#eff6ff;color:#0168fa}.agenda .tag.key{background:#f0fdf4;color:#16a34a}.agenda .tag.new{background:#fef3c7;color:#92400e}
+.agenda li::before{content:counter(ag);width:52px;height:52px;border-radius:14px;background:#eff6ff;color:#0168fa;font-size:20px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.agenda .title{font-size:20px;font-weight:700;color:#0f172a}
+.agenda .desc{font-size:14px;color:#64748b;margin-top:2px}
+.agenda .tag{font-size:11px;font-weight:700;padding:4px 12px;border-radius:6px;letter-spacing:0.5px;margin-left:auto;flex-shrink:0;white-space:nowrap}
+.agenda .tag.data{background:#eff6ff;color:#0168fa}
+.agenda .tag.key{background:#f0fdf4;color:#16a34a}
+.agenda .tag.interactive{background:#fef3c7;color:#92400e}
 
-/* Mono nums */
-.mono{font-family:'JetBrains Mono',monospace;font-weight:600}
-
-/* Footer & Nav */
 .foot{position:absolute;bottom:36px;left:120px;right:120px;font-size:12px;color:#cbd5e1;display:flex;justify-content:space-between}
 .snum{position:absolute;bottom:36px;right:60px;font-size:14px;font-weight:600;color:#e2e8f0;letter-spacing:2px}
 .prog{position:absolute;bottom:0;left:0;height:4px;background:linear-gradient(90deg,#0168fa,#3b82f6);transition:width 0.5s ease}
 .hint{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);font-size:12px;color:#e2e8f0;letter-spacing:1px;z-index:10}
 
-/* Fade-up */
 .fu{opacity:0;transform:translateY(24px);transition:all 0.7s cubic-bezier(0.22,0.61,0.36,1)}
 .fu.v{opacity:1;transform:translateY(0)}
 
-/* Dark overrides */
 .dark h1,.dark h2{color:#f1f5f9}
+.dark .sub{color:#94a3b8}
 .dark .card{background:#111827;border-color:#1e293b}
 .dark .card p{color:#94a3b8}
 .dark .card h3{color:#f1f5f9}
 .dark .card.pop{border-color:#0168fa;background:#0f172a}
 .dark .card.accent{background:rgba(1,104,250,0.08);border-color:rgba(1,104,250,0.2)}
-.dark .dtable td{color:#94a3b8;border-color:#1e293b}
-.dark .dtable .tot td{color:#f1f5f9;border-color:#334155}
-
-/* Highlight number */
-.hn{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:inherit}
 </style>
 </head>
 <body>
@@ -105,241 +92,249 @@ h2{font-size:44px;font-weight:800;line-height:1.12;letter-spacing:-1.5px;color:#
     <div class="fu" id="t4"><div class="sn-big green">7.5×</div><div class="sn-lbl">More on Claims</div></div>
   </div>
   <div class="foot"><span>Data: Mark-Taylor collections, move-in/out, ePremium pool · Jan 2024 – Feb 2026</span></div>
-  <div class="snum">01 / 08</div>
-  <div class="prog" style="width:12.5%"></div>
+  <div class="snum">01 / 07</div>
+  <div class="prog" style="width:14.3%"></div>
 </div>
 
 <!-- ==================== SLIDE 2: Agenda ==================== -->
 <div class="slide" data-slide="2">
   <div class="eyebrow">Today's Review</div>
-  <h2>What we'll cover</h2>
-  <p class="sub" style="margin-bottom:32px">Every number traces back to data your team provided. Nothing estimated.</p>
-  <ol class="agenda" style="max-width:780px">
-    <li><strong>The Deposit Gap</strong> — 90% of leases have $0 on file <span class="tag data">259 leases</span></li>
-    <li><strong>eDeposit Coverage</strong> — where claims are falling short <span class="tag data">82 accounts</span></li>
-    <li><strong>The Pool Reframe</strong> — what the $22K withdrawal actually means <span class="tag key">key insight</span></li>
-    <li><strong>Head-to-Head Results</strong> — total economic value comparison <span class="tag key">decision point</span></li>
-    <li><strong>Revenue to Mark-Taylor</strong> — corporate + property breakdown <span class="tag new">5.8× more</span></li>
-    <li><strong>Account-Level Walkthrough</strong> — real accounts, real outcomes <span class="tag data">interactive</span></li>
-    <li><strong>Recommendation & Next Steps</strong> <span class="tag key">action items</span></li>
+  <h2>What we'll walk through</h2>
+  <p class="sub" style="margin-bottom:36px">Four analyses — all built from data your team provided.</p>
+  <ol class="agenda">
+    <li>
+      <div>
+        <div class="title">Head-to-Head Results</div>
+        <div class="desc">Same 82 accounts, same $201K in damages — total economic value under each program</div>
+      </div>
+      <span class="tag key">decision point</span>
+    </li>
+    <li>
+      <div>
+        <div class="title">Resident Journey — 82 Collections Accounts</div>
+        <div class="desc">Walk through real accounts one by one — what eDeposit paid vs what USD covers</div>
+      </div>
+      <span class="tag data">account-level</span>
+    </li>
+    <li>
+      <div>
+        <div class="title">Full Property View — All 217 Residents</div>
+        <div class="desc">Every enrolled resident at Sanctuary — deposits building, coverage growing month over month</div>
+      </div>
+      <span class="tag data">full picture</span>
+    </li>
+    <li>
+      <div>
+        <div class="title">Guarantee Model — Interactive Stress Test</div>
+        <div class="desc">Drag the sliders — skip rate, deposit size, timing. See when Union has exposure and when it doesn't</div>
+      </div>
+      <span class="tag interactive">interactive</span>
+    </li>
   </ol>
-  <div class="snum">02 / 08</div>
-  <div class="prog" style="width:25%"></div>
+  <div class="snum">02 / 07</div>
+  <div class="prog" style="width:28.6%"></div>
 </div>
 
-<!-- ==================== SLIDE 3: The Deposit Gap ==================== -->
+<!-- ==================== SLIDE 3: Head to Head Preview ==================== -->
 <div class="slide" data-slide="3" style="background:#fafafa">
-  <div class="eyebrow">The Problem</div>
-  <h2><span class="red">90%</span> of residents have<br>zero deposit on file.</h2>
-  <div style="display:flex;gap:44px;margin-top:28px">
-    <div style="flex:1">
-      <div class="card" style="padding:24px">
-        <table class="dtable">
-          <tbody>
-            <tr><td>Total leases (24 months)</td><td class="num" style="font-weight:700">259</td></tr>
-            <tr><td>Leases with $0 deposit</td><td class="num r" style="font-weight:700">234 (90%)</td></tr>
-            <tr><td>Average deposit per lease</td><td class="num r">$134</td></tr>
-            <tr><td>Standard deposit amount</td><td class="num">$900</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="card danger" style="margin-top:14px;padding:24px">
-        <h3 class="red">Lease Breaks: 48 Early Departures</h3>
-        <p><strong class="red">85%</strong> had $0 on file when they walked out. Skips + evictions = 56% of breaks. Property had zero protection on the majority of its highest-risk residents.</p>
-      </div>
-    </div>
-    <div style="flex:1">
-      <div style="display:flex;gap:16px;margin-bottom:16px">
-        <div class="card" style="flex:1;text-align:center;padding:24px">
-          <div style="font-size:48px;font-weight:900;color:#dc2626;letter-spacing:-2px">$34K</div>
-          <div style="font-size:12px;color:#94a3b8;margin-top:4px;text-transform:uppercase;letter-spacing:1px">Deposits on Hand</div>
-        </div>
-        <div class="card pop" style="flex:1;text-align:center;padding:24px">
-          <div style="font-size:48px;font-weight:900;color:#0168fa;letter-spacing:-2px">$164K</div>
-          <div style="font-size:12px;color:#94a3b8;margin-top:4px;text-transform:uppercase;letter-spacing:1px">USD Would Provide</div>
-        </div>
-      </div>
-      <div class="card accent" style="padding:20px">
-        <p style="font-size:17px;margin:0;color:#1e40af"><strong>4.7× more deposit coverage.</strong> Every resident, every lease, from month one.</p>
-      </div>
-    </div>
-  </div>
-  <div class="snum">03 / 08</div>
-  <div class="prog" style="width:37.5%"></div>
-</div>
-
-<!-- ==================== SLIDE 4: eDeposit Isn't Working ==================== -->
-<div class="slide" data-slide="4">
-  <div class="eyebrow">Coverage Analysis — 82 Collections Accounts</div>
-  <h2>eDeposit recovered <span class="red">3%</span> of damages.<br>72% of claims were <span class="red">denied</span>.</h2>
-  <div style="display:flex;gap:44px;margin-top:28px">
-    <div style="flex:1.1">
-      <div style="margin-top:8px">
-        <div class="bar-row">
-          <div class="bar-lbl">Total damages</div>
-          <div class="bar-track"><div class="bar-fill" style="width:100%;background:#0f172a">$201,772</div></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-lbl">eDeposit claims paid</div>
-          <div class="bar-track"><div class="bar-fill rd" style="width:3%">$5,920</div></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-lbl">USD forfeited deposits</div>
-          <div class="bar-track"><div class="bar-fill bl" style="width:22%">$44,514</div></div>
-        </div>
-      </div>
-      <div class="card" style="margin-top:20px;padding:20px 24px">
-        <h3 style="color:#94a3b8;font-size:13px">Why 72% Denied?</h3>
-        <p>ePremium excludes final utilities, unpaid rent, lease break fees, and most surface types. The majority of what the property actually loses falls <strong>outside their coverage</strong>.</p>
-      </div>
-    </div>
-    <div style="flex:0.9">
-      <div class="vs-row" style="flex-direction:column;gap:16px">
-        <div class="card danger" style="text-align:center;padding:24px;width:100%">
-          <div style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1.5px">eDeposit</div>
-          <div style="font-size:48px;font-weight:900;color:#dc2626;letter-spacing:-2px;margin:4px 0">23</div>
-          <div style="font-size:15px;color:#64748b">of 82 claims paid</div>
-        </div>
-        <div class="card pop" style="text-align:center;padding:24px;width:100%">
-          <div style="font-size:11px;font-weight:700;color:#0168fa;text-transform:uppercase;letter-spacing:1.5px">USD</div>
-          <div style="font-size:48px;font-weight:900;color:#0168fa;letter-spacing:-2px;margin:4px 0">82</div>
-          <div style="font-size:15px;color:#64748b">of 82 accounts covered</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="snum">04 / 08</div>
-  <div class="prog" style="width:50%"></div>
-</div>
-
-<!-- ==================== SLIDE 5: Pool Reframe ==================== -->
-<div class="slide dark" data-slide="5">
-  <div class="eyebrow">The Key Insight</div>
-  <h2 style="font-size:46px">The $22K pool withdrawal exists<br><em style="font-style:normal;color:#ef4444">because</em> coverage failed.</h2>
-  <p class="sub" style="color:#94a3b8;max-width:680px">Pool accumulation and claims paid are inversely related. Less paid out in claims = more in the pool = larger withdrawal.</p>
-  <div style="display:flex;gap:32px;margin-top:36px;max-width:820px">
-    <div class="card" style="flex:1;text-align:center;padding:28px">
-      <div style="font-size:44px;font-weight:900;color:#16a34a;letter-spacing:-2px">$22,001</div>
-      <div style="font-size:12px;color:#64748b;margin-top:6px;text-transform:uppercase;letter-spacing:1px">Pool Withdrawal</div>
-    </div>
-    <div style="display:flex;align-items:center;font-size:28px;color:#334155;flex-shrink:0">⟷</div>
-    <div class="card" style="flex:1;text-align:center;padding:28px">
-      <div style="font-size:44px;font-weight:900;color:#ef4444;letter-spacing:-2px">$5,920</div>
-      <div style="font-size:12px;color:#64748b;margin-top:6px;text-transform:uppercase;letter-spacing:1px">Claims Paid</div>
-    </div>
-  </div>
-  <div class="card accent" style="margin-top:28px;max-width:820px;padding:20px 28px">
-    <p style="font-size:17px;margin:0;color:#93c5fd">If ePremium had covered $30K–$40K in damages the way a strong program should, the pool would be <strong style="color:#f1f5f9">depleted</strong>. The withdrawal is the byproduct of a coverage gap — not revenue from protection.</p>
-  </div>
-  <div class="snum">05 / 08</div>
-  <div class="prog" style="width:62.5%"></div>
-</div>
-
-<!-- ==================== SLIDE 6: Head to Head ==================== -->
-<div class="slide" data-slide="6" style="background:#fafafa">
-  <div class="eyebrow">Total Economic Value — Same 82 Accounts</div>
-  <h2>USD delivers <span class="green">+$10K more</span> to the property.<br><span class="blue">+$11K more</span> to Mark-Taylor.</h2>
+  <div class="eyebrow">① Head-to-Head Results</div>
+  <h2>USD delivers more to <span class="blue">both sides</span><br>of the table.</h2>
   <div style="display:flex;gap:32px;margin-top:28px">
-    <div class="vs-box dim" style="flex:1;padding:28px;text-align:left;border-radius:16px;border:1px solid #e2e8f0;background:#f8fafc">
-      <div style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px">eDeposit — Property</div>
+    <div style="flex:1;background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:28px">
+      <div style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px">eDeposit — Total Value</div>
       <table class="dtable" style="font-size:15px">
         <tbody>
-          <tr><td>Claims paid</td><td class="num">$5,920</td></tr>
-          <tr><td>Collections (60%)</td><td class="num">$13,741</td></tr>
+          <tr><td>Claims paid</td><td class="num">$5,920</td><td style="font-size:12px;color:#94a3b8">23 of 83 paid</td></tr>
+          <tr><td>Collections to property (60%)</td><td class="num">$13,741</td></tr>
           <tr><td>Pool withdrawal</td><td class="num">$22,001</td></tr>
-          <tr class="tot"><td>Total to property</td><td class="num" style="font-size:22px">$41,662</td></tr>
+          <tr class="tot"><td><strong>Property total</strong></td><td class="num" style="font-size:20px">$41,662</td></tr>
         </tbody>
       </table>
-      <div style="margin-top:16px;padding-top:12px;border-top:1px solid #e2e8f0">
-        <div style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">eDeposit — Mark-Taylor</div>
-        <div style="font-size:28px;font-weight:900;color:#94a3b8;letter-spacing:-1px">$2,256<span style="font-size:14px;font-weight:600;letter-spacing:0">/yr</span></div>
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid #e2e8f0">
+        <div style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1.5px">Mark-Taylor Corporate</div>
+        <div style="font-size:28px;font-weight:900;color:#94a3b8;letter-spacing:-1px;margin-top:4px">$2,256<span style="font-size:14px;font-weight:600">/yr</span></div>
         <div style="font-size:12px;color:#94a3b8">5% pool fee</div>
       </div>
     </div>
     <div style="display:flex;align-items:center;flex-shrink:0"><div class="vs-dot">VS</div></div>
-    <div class="vs-box pop" style="flex:1;padding:28px;text-align:left;border-radius:16px">
-      <div style="font-size:11px;font-weight:700;color:#0168fa;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px">USD — Property</div>
+    <div style="flex:1;background:#eff6ff;border:2px solid #0168fa;border-radius:16px;padding:28px">
+      <div style="font-size:11px;font-weight:700;color:#0168fa;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px">USD — Total Value</div>
       <table class="dtable" style="font-size:15px">
         <tbody>
-          <tr><td>Forfeited deposits</td><td class="num b">$44,514</td></tr>
-          <tr><td>Collections (60%)</td><td class="num">$7,527</td></tr>
-          <tr class="tot"><td>Total to property</td><td class="num b" style="font-size:22px">$52,041</td></tr>
+          <tr><td>Forfeited deposits</td><td class="num b">$44,514</td><td style="font-size:12px;color:#64748b">83 accounts — all covered</td></tr>
+          <tr><td>Collections to property (60%)</td><td class="num">$7,527</td></tr>
+          <tr><td style="color:#94a3b8">Rev share (property split TBD)</td><td class="num" style="color:#94a3b8">—</td></tr>
+          <tr class="tot"><td><strong>Property total</strong></td><td class="num b" style="font-size:20px">$52,041</td></tr>
         </tbody>
       </table>
-      <div style="margin-top:16px;padding-top:12px;border-top:1px solid #bfdbfe">
-        <div style="font-size:11px;font-weight:700;color:#0168fa;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">USD — Mark-Taylor</div>
-        <div style="font-size:28px;font-weight:900;color:#0168fa;letter-spacing:-1px">$13,020<span style="font-size:14px;font-weight:600;letter-spacing:0">/yr</span></div>
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid #bfdbfe">
+        <div style="font-size:11px;font-weight:700;color:#0168fa;text-transform:uppercase;letter-spacing:1.5px">Mark-Taylor Corporate</div>
+        <div style="font-size:28px;font-weight:900;color:#0168fa;letter-spacing:-1px;margin-top:4px">$13,020<span style="font-size:14px;font-weight:600">/yr</span></div>
         <div style="font-size:12px;color:#64748b">$5/unit/mo × 217 units</div>
       </div>
     </div>
   </div>
   <div class="cards" style="margin-top:20px">
-    <div class="card success" style="text-align:center;padding:20px">
-      <div style="font-size:13px;color:#16a34a;font-weight:700;text-transform:uppercase;letter-spacing:1px">Property Advantage</div>
-      <div style="font-size:36px;font-weight:900;color:#16a34a;letter-spacing:-1px">+$10,379</div>
+    <div class="card success" style="text-align:center;padding:18px">
+      <div style="font-size:12px;color:#16a34a;font-weight:700;text-transform:uppercase;letter-spacing:1px">Property</div>
+      <div style="font-size:32px;font-weight:900;color:#16a34a;letter-spacing:-1px">+$10,379</div>
     </div>
-    <div class="card pop" style="text-align:center;padding:20px">
-      <div style="font-size:13px;color:#0168fa;font-weight:700;text-transform:uppercase;letter-spacing:1px">Mark-Taylor Advantage</div>
-      <div style="font-size:36px;font-weight:900;color:#0168fa;letter-spacing:-1px">+$10,764</div>
-      <div style="font-size:13px;color:#64748b;margin-top:2px">5.8× more corporate revenue</div>
+    <div class="card pop" style="text-align:center;padding:18px">
+      <div style="font-size:12px;color:#0168fa;font-weight:700;text-transform:uppercase;letter-spacing:1px">Mark-Taylor</div>
+      <div style="font-size:32px;font-weight:900;color:#0168fa;letter-spacing:-1px">5.8× more</div>
     </div>
-    <div class="card accent" style="text-align:center;padding:20px">
-      <div style="font-size:13px;color:#1e40af;font-weight:700;text-transform:uppercase;letter-spacing:1px">Dan's Analysis Confirms</div>
-      <div style="font-size:36px;font-weight:900;color:#1e40af;letter-spacing:-1px">+$14,230</div>
-      <div style="font-size:13px;color:#64748b;margin-top:2px">Conservative 10% recovery rate</div>
+    <div class="card accent" style="text-align:center;padding:18px">
+      <div style="font-size:12px;color:#1e40af;font-weight:700;text-transform:uppercase;letter-spacing:1px">Dan's Analysis</div>
+      <div style="font-size:32px;font-weight:900;color:#1e40af;letter-spacing:-1px">+$14,230</div>
     </div>
   </div>
-  <div class="snum">06 / 08</div>
-  <div class="prog" style="width:75%"></div>
+  <div class="foot"><span>→ We'll open the full interactive comparison next</span></div>
+  <div class="snum">03 / 07</div>
+  <div class="prog" style="width:42.9%"></div>
 </div>
 
-<!-- ==================== SLIDE 7: Collections + Guarantee ==================== -->
-<div class="slide" data-slide="7">
-  <div class="eyebrow">How It Works</div>
-  <h2>53 accounts need <span class="green">zero collections</span>.<br>Guarantee is <span class="green">self-funded</span> by month 6.</h2>
+<!-- ==================== SLIDE 4: Resident Journey Preview ==================== -->
+<div class="slide" data-slide="4">
+  <div class="eyebrow">② Resident Journey — 82 Collections Accounts</div>
+  <h2>Every account tells the<br>same story.</h2>
   <div style="display:flex;gap:44px;margin-top:28px">
     <div style="flex:1">
-      <div class="card success" style="padding:24px">
-        <h3 style="color:#16a34a">Deposit Eliminates Collections on 53 of 82</h3>
-        <p>53 accounts owed less than $900. The deposit covers them <strong>completely</strong> — no claim, no denial, no waiting. Zero collections needed.</p>
-        <div style="display:flex;gap:12px;margin-top:16px">
-          <div style="flex:1;text-align:center;padding:14px;background:#f0fdf4;border-radius:10px">
-            <div style="font-size:28px;font-weight:900;color:#dc2626">82</div>
-            <div style="font-size:11px;color:#94a3b8;margin-top:2px">eDeposit → collections</div>
-          </div>
-          <div style="display:flex;align-items:center;font-size:20px;color:#94a3b8">→</div>
-          <div style="flex:1;text-align:center;padding:14px;background:#f0fdf4;border-radius:10px">
-            <div style="font-size:28px;font-weight:900;color:#16a34a">29</div>
-            <div style="font-size:11px;color:#94a3b8;margin-top:2px">USD → collections</div>
-          </div>
+      <p class="sub" style="margin-top:0;font-size:17px;max-width:none">We'll walk through the 82 accounts that went to collections — one by one. For each resident, you'll see what they owed, what eDeposit paid, and what USD would have covered.</p>
+      <div style="display:flex;gap:16px;margin-top:24px">
+        <div class="card danger" style="text-align:center;padding:20px;flex:1">
+          <div style="font-size:40px;font-weight:900;color:#dc2626;letter-spacing:-1px">59</div>
+          <div style="font-size:12px;color:#94a3b8;margin-top:4px">eDeposit denied<br>(72% of accounts)</div>
         </div>
-        <p style="margin-top:12px;font-size:14px;color:#64748b"><strong>65% reduction</strong> in collections workload. Lower collections isn't lost revenue — it's revenue already captured by the deposit.</p>
+        <div class="card pop" style="text-align:center;padding:20px;flex:1">
+          <div style="font-size:40px;font-weight:900;color:#0168fa;letter-spacing:-1px">83</div>
+          <div style="font-size:12px;color:#94a3b8;margin-top:4px">USD covers<br>(100% of accounts)</div>
+        </div>
+      </div>
+      <div class="card success" style="margin-top:16px;padding:20px">
+        <h3 style="color:#16a34a">53 accounts need zero collections</h3>
+        <p>They owed less than $900. The deposit covers them completely — no claim, no denial, no waiting.</p>
+      </div>
+    </div>
+    <div style="flex:1">
+      <div class="card" style="padding:24px;margin-bottom:16px">
+        <h3 style="color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:1.5px">What You'll See Per Account</h3>
+        <div style="margin-top:14px;font-size:16px;color:#475569;line-height:2.4">
+          <div>→ Total balance owed</div>
+          <div>→ eDeposit claim result <span style="font-size:13px;color:#dc2626;font-weight:600">(paid or denied)</span></div>
+          <div>→ USD deposit applied <span style="font-size:13px;color:#0168fa;font-weight:600">(min of balance, $900)</span></div>
+          <div>→ Remaining to collections (if any)</div>
+          <div>→ Net outcome comparison</div>
+        </div>
+      </div>
+      <div class="card accent" style="padding:18px">
+        <p style="font-size:15px;margin:0;color:#1e40af"><strong>Pattern:</strong> Small balances → deposit covers 100%. Large balances → property starts $900 ahead instead of $0.</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>→ Interactive walkthrough — click through each account</span></div>
+  <div class="snum">04 / 07</div>
+  <div class="prog" style="width:57.1%"></div>
+</div>
+
+<!-- ==================== SLIDE 5: Full Property Preview ==================== -->
+<div class="slide dark" data-slide="5">
+  <div class="eyebrow">③ Full Property View — All 217 Residents</div>
+  <h2 style="font-size:42px">Not just collections.<br><span style="color:#60a5fa">Every resident at Sanctuary.</span></h2>
+  <p class="sub" style="color:#94a3b8;max-width:660px">The collections view shows the worst cases. The full property view shows the complete picture — deposits building across all 217 enrolled units.</p>
+  <div class="cards" style="margin-top:32px;max-width:880px">
+    <div class="card" style="text-align:center;padding:24px">
+      <div style="font-size:48px;font-weight:900;color:#f1f5f9;letter-spacing:-2px">217</div>
+      <div style="font-size:12px;color:#64748b;margin-top:4px;text-transform:uppercase;letter-spacing:1px">Units Enrolled</div>
+    </div>
+    <div class="card" style="text-align:center;padding:24px">
+      <div style="font-size:48px;font-weight:900;color:#60a5fa;letter-spacing:-2px">$164K</div>
+      <div style="font-size:12px;color:#64748b;margin-top:4px;text-transform:uppercase;letter-spacing:1px">Total Deposit Coverage</div>
+    </div>
+    <div class="card" style="text-align:center;padding:24px">
+      <div style="font-size:48px;font-weight:900;color:#10b981;letter-spacing:-2px">4.7×</div>
+      <div style="font-size:12px;color:#64748b;margin-top:4px;text-transform:uppercase;letter-spacing:1px">vs Traditional Deposits</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:20px;margin-top:24px;max-width:880px">
+    <div class="card accent" style="flex:1;padding:20px">
+      <h3 style="color:#93c5fd;font-size:14px">Good Move-Outs</h3>
+      <p style="color:#94a3b8;font-size:14px">Resident gets every dollar back. <strong style="color:#f1f5f9">Incentive to leave the unit clean.</strong> Lower turn costs, faster re-leasing.</p>
+    </div>
+    <div class="card accent" style="flex:1;padding:20px">
+      <h3 style="color:#93c5fd;font-size:14px">Bad Move-Outs</h3>
+      <p style="color:#94a3b8;font-size:14px">Property keeps the deposit immediately. <strong style="color:#f1f5f9">No claim to file, no denial.</strong> Excess goes to collections.</p>
+    </div>
+    <div class="card accent" style="flex:1;padding:20px">
+      <h3 style="color:#93c5fd;font-size:14px">Current Residents</h3>
+      <p style="color:#94a3b8;font-size:14px">Deposits building every month. <strong style="color:#f1f5f9">50% guaranteed from day one.</strong> Full $900 by lease end.</p>
+    </div>
+  </div>
+  <div class="foot" style="color:#334155"><span>→ Full scrollable view of all 217 accounts</span></div>
+  <div class="snum">05 / 07</div>
+  <div class="prog" style="width:71.4%"></div>
+</div>
+
+<!-- ==================== SLIDE 6: Guarantee Preview ==================== -->
+<div class="slide" data-slide="6" style="background:#fafafa">
+  <div class="eyebrow">④ Guarantee Model — Stress Test</div>
+  <h2>Self-funded by month 6.<br><span class="green">Drag the sliders yourself.</span></h2>
+  <div style="display:flex;gap:44px;margin-top:28px">
+    <div style="flex:1">
+      <div class="card" style="padding:24px">
+        <h3 style="color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px">How the 50% Guarantee Works</h3>
+        <table class="dtable" style="font-size:15px">
+          <tbody>
+            <tr><td>Resident pays</td><td class="num b">$75/month</td></tr>
+            <tr><td>50% guarantee</td><td class="num">$450</td></tr>
+            <tr><td>Self-funded at</td><td class="num b">Month 6</td></tr>
+            <tr><td>Avg skip/eviction month</td><td class="num">Month 6–7</td></tr>
+            <tr class="tot"><td>Union out-of-pocket at avg skip</td><td class="num g">$0</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card success" style="margin-top:14px;padding:20px">
+        <h3 style="color:#16a34a">4.5× Safety Margin</h3>
+        <p>Even in the worst case — every skip at month 3 — the service fee pool generates 4.5× more than the guarantee payouts.</p>
       </div>
     </div>
     <div style="flex:1">
       <div class="card" style="padding:24px">
-        <h3>50% Guarantee — Self-Funded</h3>
-        <table class="dtable" style="font-size:15px">
-          <tbody>
-            <tr><td>Monthly installment</td><td class="num">$75</td></tr>
-            <tr><td>50% guarantee amount</td><td class="num">$450</td></tr>
-            <tr><td>Months to self-fund</td><td class="num b">6 months</td></tr>
-            <tr><td>Average skip month</td><td class="num">Month 6–7</td></tr>
-            <tr class="tot"><td>Union exposure at avg skip</td><td class="num g">$0</td></tr>
-          </tbody>
-        </table>
-        <div class="card accent" style="margin-top:16px;padding:14px 18px">
-          <p style="font-size:14px;margin:0;color:#1e40af">Even worst-case (every skip at month 3), the fee pool has a <strong>4.5× safety margin</strong> over payouts.</p>
+        <h3 style="color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px">What You Can Adjust</h3>
+        <div style="font-size:16px;color:#475569;line-height:2.6">
+          <div style="display:flex;align-items:center;gap:12px">
+            <span style="width:32px;height:32px;border-radius:8px;background:#eff6ff;color:#0168fa;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0">1</span>
+            <span><strong>Deposit amount</strong> — $350 to $1,500</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <span style="width:32px;height:32px;border-radius:8px;background:#eff6ff;color:#0168fa;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0">2</span>
+            <span><strong>Skip + eviction rate</strong> — 1% to 50%</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <span style="width:32px;height:32px;border-radius:8px;background:#eff6ff;color:#0168fa;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0">3</span>
+            <span><strong>Enrolled units</strong> — 50 to 500</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <span style="width:32px;height:32px;border-radius:8px;background:#eff6ff;color:#0168fa;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0">4</span>
+            <span><strong>Average skip month</strong> — month 1 to 18</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <span style="width:32px;height:32px;border-radius:8px;background:#eff6ff;color:#0168fa;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0">5</span>
+            <span><strong>Collections recovery</strong> — stress test any assumption</span>
+          </div>
         </div>
+      </div>
+      <div class="card accent" style="margin-top:14px;padding:16px 20px">
+        <p style="font-size:15px;margin:0;color:#1e40af"><strong>Try to break it.</strong> Crank skip rate to 50%, move skips to month 1 — the model shows exactly where the line is.</p>
       </div>
     </div>
   </div>
-  <div class="snum">07 / 08</div>
-  <div class="prog" style="width:87.5%"></div>
+  <div class="foot"><span>→ Fully interactive — adjust any parameter live</span></div>
+  <div class="snum">06 / 07</div>
+  <div class="prog" style="width:85.7%"></div>
 </div>
 
-<!-- ==================== SLIDE 8: Recommendation ==================== -->
-<div class="slide" data-slide="8" style="text-align:center;align-items:center">
+<!-- ==================== SLIDE 7: Recommendation ==================== -->
+<div class="slide" data-slide="7" style="text-align:center;align-items:center">
   <div class="eyebrow">Recommendation</div>
   <h1 style="font-size:48px">Better protection. Higher value.<br><span class="blue">Both sides of the table.</span></h1>
   <div class="cards" style="margin-top:40px;max-width:920px">
@@ -369,7 +364,7 @@ h2{font-size:44px;font-weight:800;line-height:1.12;letter-spacing:-1.5px;color:#
     </div>
   </div>
   <div class="foot" style="text-align:center;justify-content:center"><span>All figures from actual Sanctuary on 51st data · Union — March 2026</span></div>
-  <div class="snum">08 / 08</div>
+  <div class="snum">07 / 07</div>
   <div class="prog" style="width:100%"></div>
 </div>
 
