@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MT Exec Meeting — Script</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0a0e1a;color:#e2e5ea;min-height:100vh}
+.dock{max-width:680px;margin:0 auto;padding:40px 24px 120px}
+
+/* Header */
+.title-bar{text-align:center;margin-bottom:48px;padding-bottom:24px;border-bottom:1px solid #1e293b}
+.title-bar h1{font-size:13px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#0168fa}
+.title-bar .meta{font-size:11px;color:#64748b;margin-top:6px}
+
+/* Sections */
+.beat{margin-bottom:40px;padding:24px 28px;background:#111827;border:1px solid #1e293b;border-radius:14px;position:relative}
+.beat:hover{border-color:#334155}
+.beat-num{position:absolute;top:-10px;left:20px;background:#0168fa;color:#fff;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 12px;border-radius:5px}
+.beat-num.close{background:#10b981}
+.beat h2{font-size:16px;font-weight:800;margin:8px 0 4px;color:#f1f5f9}
+.beat .time{font-size:10px;color:#64748b;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px}
+.beat .file-link{display:inline-block;background:rgba(1,104,250,0.1);border:1px solid rgba(1,104,250,0.25);color:#60a5fa;font-size:10px;font-weight:700;padding:4px 12px;border-radius:6px;text-decoration:none;margin-bottom:14px;letter-spacing:0.5px}
+.beat .file-link:hover{background:rgba(1,104,250,0.2)}
+
+/* Say blocks */
+.say{background:rgba(1,104,250,0.06);border-left:3px solid #0168fa;border-radius:0 8px 8px 0;padding:14px 18px;margin:10px 0;font-size:13px;line-height:1.75;color:#cbd5e1}
+.say strong{color:#f1f5f9}
+.say em{color:#94a3b8;font-style:normal;font-size:11px}
+
+/* Notes */
+.note{font-size:11px;color:#64748b;margin:8px 0;padding-left:14px;border-left:2px solid #334155;line-height:1.6}
+.note strong{color:#94a3b8}
+
+/* Kill stat */
+.stat{display:inline-block;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;padding:2px 8px;border-radius:4px;margin:0 2px}
+.stat.green{background:rgba(16,185,129,0.12);color:#10b981}
+.stat.red{background:rgba(239,68,68,0.12);color:#ef4444}
+.stat.blue{background:rgba(1,104,250,0.12);color:#60a5fa}
+.stat.amber{background:rgba(245,158,11,0.12);color:#fbbf24}
+
+/* Objection */
+.obj{background:#1a1520;border:1px solid #2d1f3d;border-radius:10px;padding:16px 20px;margin:10px 0}
+.obj .q{font-size:11px;font-weight:700;color:#c084fc;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.obj .a{font-size:12px;color:#cbd5e1;line-height:1.7}
+
+/* Divider */
+hr{border:none;border-top:1px solid #1e293b;margin:8px 0}
+
+/* Checklist */
+.checklist{list-style:none;margin:12px 0}
+.checklist li{font-size:12px;color:#94a3b8;padding:4px 0 4px 22px;position:relative}
+.checklist li::before{content:"→";position:absolute;left:0;color:#0168fa;font-weight:700}
+</style>
+</head>
+<body>
+<div class="dock">
+
+<div class="title-bar">
+  <h1>Mark-Taylor Exec Meeting</h1>
+  <div class="meta">Thursday, March 26 · Sanctuary on 51st · USD vs eDeposit</div>
+  <div class="meta" style="margin-top:4px;color:#475569">Your script. Their data. Close it.</div>
+</div>
+
+<!-- ==================== BEAT 1 ==================== -->
+<div class="beat">
+  <div class="beat-num">Open</div>
+  <h2>Set the Frame</h2>
+  <div class="time">~60 seconds · No screen share yet</div>
+
+  <div class="say">
+    Thanks everyone. I know we've been going back and forth on the financials, so I want to put a <strong>clear, data-driven answer</strong> on the table today.<br><br>
+    Your team — Dan, Jessica, Derek — shared two full years of Sanctuary data. Move-ins, collections, ePremium pool, lease terms. We built a <strong>complete financial comparison</strong> from it.<br><br>
+    Every number I'm going to show you traces back to <strong>data you gave us</strong>. Nothing modeled, nothing estimated — your actual accounts.
+  </div>
+
+  <div class="note"><strong>Frame:</strong> This is THEIR data, not your projections. You're the analyst, not the salesman.</div>
+</div>
+
+<!-- ==================== BEAT 2 ==================== -->
+<div class="beat">
+  <div class="beat-num">Beat 2</div>
+  <h2>The Deposit Gap</h2>
+  <div class="time">~90 seconds · Share: Performance Overview</div>
+  <a href="MT_Cheat_Sheet.html" target="_blank" class="file-link">📊 Open: Performance Overview</a>
+
+  <div class="say">
+    Let me start with the deposit picture at Sanctuary today.<br><br>
+    259 leases over the last two years. <span class="stat red">90%</span> had <strong>zero deposit on file</strong>. Average deposit per lease: <span class="stat red">$134</span> against a $900 standard.<br><br>
+    48 residents broke their lease early. <strong>85% of them had $0 on file</strong> when they walked out. Skips and evictions made up over half of those.<br><br>
+    Under USD, all 259 leases would have <span class="stat blue">$164,239</span> in deposit coverage. That's <span class="stat green">4.7× more</span> than what's on the books today.
+  </div>
+
+  <div class="note"><strong>Anchor:</strong> They're currently flying with no parachute. 90% unprotected is the problem USD solves.</div>
+</div>
+
+<!-- ==================== BEAT 3 ==================== -->
+<div class="beat">
+  <div class="beat-num">Beat 3</div>
+  <h2>eDeposit Isn't Covering What They Think</h2>
+  <div class="time">~90 seconds · Same page, scroll to Collections</div>
+
+  <div class="say">
+    82 residents went to collections. <span class="stat red">$196K</span> in total damages. ePremium paid claims on <strong>23</strong>. The other <span class="stat red">59 — 72%</span> — got <strong>zero coverage</strong>.<br><br>
+    Total claims paid: <span class="stat red">$5,920</span>. On $196K in damages. That's a <strong>3% recovery rate</strong>.<br><br>
+    The reason is structural — ePremium excludes utilities, unpaid rent, lease break fees, most surface types. The majority of what the property actually loses falls outside their coverage.
+  </div>
+
+  <div class="note"><strong>Let this land.</strong> $5,920 on $196K is the stat that changes minds. Pause after you say it.</div>
+</div>
+
+<!-- ==================== BEAT 4 ==================== -->
+<div class="beat">
+  <div class="beat-num">Beat 4</div>
+  <h2>The Pool Reframe</h2>
+  <div class="time">~60 seconds · Most important reframe in the meeting</div>
+
+  <div class="say">
+    I know the <span class="stat amber">$22K pool withdrawal</span> gets a lot of attention. Here's what the data shows about how that number works.<br><br>
+    The pool and claims are <strong>inversely related</strong>. The less ePremium pays in claims, the more accumulates in the pool. That $22K exists <strong>specifically because</strong> only $5,920 was paid out on $196K in damages.<br><br>
+    If ePremium had actually covered a significant portion — $30K, $40K — the pool would be depleted. <strong>The withdrawal isn't revenue from a high-performing program. It's the byproduct of a coverage gap.</strong>
+  </div>
+
+  <div class="note"><strong>PAUSE after the last line.</strong> This is where the mental model shifts. Don't rush.</div>
+</div>
+
+<!-- ==================== BEAT 5 ==================== -->
+<div class="beat">
+  <div class="beat-num">Beat 5</div>
+  <h2>Head to Head — The Money Slide</h2>
+  <div class="time">~2 minutes · Share: Head to Head</div>
+  <a href="USD_Head_to_Head.html" target="_blank" class="file-link">📊 Open: Head to Head Comparison</a>
+
+  <div class="say">
+    Same 82 accounts. Same $196K. Two programs.<br><br>
+    <strong>eDeposit total value to property:</strong> <span class="stat amber">$41,662</span> — that's pool withdrawal + claims + collections.<br><br>
+    <strong>USD total value to property:</strong> <span class="stat green">$52,041</span> — forfeited deposits + collections + rev share.<br><br>
+    That's <span class="stat green">+$10,379 more</span> to the property. And the deposits — <span class="stat blue">$44,514</span> — that's not a projection. It's computed <strong>account by account</strong> from the same 82 balances.<br><br>
+    53 accounts owed less than $900 — deposit covers them completely. No claim, no denial, no waiting. <strong>Zero collections needed on those 53.</strong><br><br>
+    Collections drops from $22K to $12K — but that's not lost money. The deposit already captured it at move-out.
+  </div>
+
+  <div class="obj">
+    <div class="q">If someone says "but collections is lower"</div>
+    <div class="a">"Right — and that's the point. The deposit already captured the first $900 on every account. You don't need to collect on money you already have."</div>
+  </div>
+</div>
+
+<!-- ==================== BEAT 6 ==================== -->
+<div class="beat">
+  <div class="beat-num">Beat 6</div>
+  <h2>Mark-Taylor Corporate Revenue: 5.8×</h2>
+  <div class="time">~45 seconds · Same page, bottom section</div>
+
+  <div class="say">
+    For Mark-Taylor corporate specifically:<br><br>
+    <strong>eDeposit today:</strong> <span class="stat amber">$2,256/yr</span> — the 5% pool fee.<br><br>
+    <strong>USD:</strong> <span class="stat green">$13,020/yr</span> — $5/unit/month across 217 units.<br><br>
+    That's <span class="stat green">5.8× more</span> revenue to Mark-Taylor. Predictable. Monthly. On top of better protection at the property level.
+  </div>
+</div>
+
+<!-- ==================== BEAT 7 ==================== -->
+<div class="beat">
+  <div class="beat-num">Beat 7</div>
+  <h2>Walk Through Real Accounts</h2>
+  <div class="time">~2 minutes · Share: Resident Journey</div>
+  <a href="USD_Story_Sim.html" target="_blank" class="file-link">📊 Open: Resident Journey (82 Accounts)</a>
+
+  <div class="say">
+    Let me show you how this plays out account by account. These are your actual 82 collections accounts — real balances, real outcomes.<br><br>
+    <em>[Click through 3-4 accounts. Pick one small-balance win, one large-balance, one denied claim.]</em><br><br>
+    See this one — <strong>$614 in damages, eDeposit denied</strong>. Under USD, the $900 deposit covers the full amount. Property is whole. No collections needed.<br><br>
+    And this one — <strong>$8,400 in damages</strong>. eDeposit paid $0. Under USD, the property keeps $900 immediately and sends the remaining $7,500 to collections. Still a large balance, but the property starts $900 ahead instead of $0.
+  </div>
+
+  <div class="note"><strong>Don't linger here.</strong> Show 3-4 accounts max. The pattern is obvious. Move on before they get fatigued.</div>
+</div>
+
+<!-- ==================== BEAT 8 ==================== -->
+<div class="beat">
+  <div class="beat-num">Beat 8</div>
+  <h2>The Guarantee — Quick & Done</h2>
+  <div class="time">~45 seconds · Share: Guarantee Model</div>
+  <a href="USD_Guarantee_Analysis.html" target="_blank" class="file-link">📊 Open: Guarantee Model</a>
+
+  <div class="say">
+    Quick note on the 50% guarantee. Residents pay $75/month. By month 6 they've paid $450 — which equals the guarantee.<br><br>
+    Sanctuary data shows skips and evictions cluster around month 6-7. So at the average skip month, <strong>Union's out-of-pocket is zero</strong>. The resident already funded it.<br><br>
+    Even in worst-case — every skip at month 3 — the fee pool has a <span class="stat green">4.5× safety margin</span> over payouts.
+  </div>
+
+  <div class="note"><strong>Keep this SHORT.</strong> The guarantee isn't their concern — revenue is. Don't over-explain.</div>
+</div>
+
+<!-- ==================== BEAT 9 ==================== -->
+<div class="beat">
+  <div class="beat-num">Beat 9</div>
+  <h2>Dan's Independent Validation</h2>
+  <div class="time">~45 seconds · No new screen needed</div>
+
+  <div class="say">
+    One more thing. Dan ran his own analysis independently — same Sanctuary data, more conservative 10% collections rate.<br><br>
+    His conclusion: USD generates <span class="stat green">$53,900</span> in total value versus <span class="stat amber">$39,700</span> for ePremium. That's a <span class="stat green">+$14,200 advantage</span> — with more conservative assumptions than ours.<br><br>
+    <strong>Your own Sr. Director of Integrated Operations arrived at the same conclusion independently.</strong>
+  </div>
+
+  <div class="note"><strong>This is the credibility closer.</strong> Their guy agrees. Don't qualify it, don't add caveats. Let it carry.</div>
+</div>
+
+<!-- ==================== BEAT 10 ==================== -->
+<div class="beat">
+  <div class="beat-num close">Close</div>
+  <h2>Recommendation & Next Steps</h2>
+  <div class="time">~60 seconds · Wrap it</div>
+
+  <div class="say">
+    So to put it simply:<br><br>
+    USD recovers <span class="stat green">7.5× more</span> on damage claims — $44,500 in deposits vs $5,900 in ePremium claims. Same accounts.<br><br>
+    Total value is higher. Confirmed by our analysis and Dan's.<br><br>
+    The guarantee costs Union nothing at the average skip month.<br><br>
+    And beyond the financials — residents with $900 on the line take care of units. Lower turn costs, fewer collections, faster re-leasing.<br><br>
+    I think we've done the due diligence. <strong>I'd love to finalize the revenue share, get the lease addendum through legal, and launch the Sanctuary pilot.</strong><br><br>
+    <em>What questions do you have?</em>
+  </div>
+
+  <div class="note"><strong>"What questions do you have?"</strong> — not "what do you think?" Assumes the conclusion is shared.</div>
+</div>
+
+<!-- ==================== OBJECTION PLAYBOOK ==================== -->
+<div style="margin-top:56px;padding-top:32px;border-top:1px solid #1e293b">
+  <h2 style="font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#c084fc;margin-bottom:20px">Objection Playbook</h2>
+
+  <div class="obj">
+    <div class="q">"But we're making $22K from the pool"</div>
+    <div class="a">The $22K exists because $190K went unrecovered. Under USD, property gets $44,500 in deposits + $10,400 rev share. Even subtracting the $22K withdrawal, property is <strong>$33K ahead</strong> on total value.</div>
+  </div>
+
+  <div class="obj">
+    <div class="q">"What about Mark-Taylor corporate revenue?"</div>
+    <div class="a">Today: $2,256 (5% pool fee). Under USD: $13,020/yr. That's <strong>5.8× more</strong> to corporate. Plus the $44,500 in deposits flows directly to the property.</div>
+  </div>
+
+  <div class="obj">
+    <div class="q">"Derek's concern — property needs $4 of the $5"</div>
+    <div class="a">At $4 to property: $10,400/yr in predictable monthly revenue vs the $22K variable pool withdrawal. But the real story is deposits — $44,500 in forfeited deposits ON TOP of whatever rev share split you determine.</div>
+  </div>
+
+  <div class="obj">
+    <div class="q">"Administrative burden — ePremium handles disputes"</div>
+    <div class="a">ePremium handled 23 of 82 cases (28%). Property managed the other 59 anyway. Under USD, deposit forfeiture is automatic. Only 29 of 82 even go to collections. That's a <strong>65% reduction</strong> in collections workload.</div>
+  </div>
+
+  <div class="obj">
+    <div class="q">"What about resident experience?"</div>
+    <div class="a">Under ePremium, resident pays $270 and it's gone — no refund no matter what. Under USD, $75/month, and if they leave the unit clean, <strong>every dollar comes back</strong>. It's the only alternative that rewards good behavior.</div>
+  </div>
+
+  <div class="obj">
+    <div class="q">"We need to see other properties, not just Sanctuary"</div>
+    <div class="a">Sanctuary is your highest-risk property at 16.3% skip rate. If USD delivers here, numbers only get better at lower-risk communities. Happy to model more once we have data.</div>
+  </div>
+
+  <div class="obj">
+    <div class="q">"Collections is lower under USD"</div>
+    <div class="a">Because the deposit already captured the first $900 on every account. You don't collect on money you already have. 53 accounts are fully covered — zero collections needed.</div>
+  </div>
+</div>
+
+<!-- ==================== REMINDERS ==================== -->
+<div style="margin-top:48px;padding:20px 24px;background:rgba(1,104,250,0.06);border:1px solid rgba(1,104,250,0.15);border-radius:12px">
+  <h2 style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#60a5fa;margin-bottom:10px">Delivery Reminders</h2>
+  <ul class="checklist">
+    <li><strong>Pace yourself.</strong> Silence after a key number is more powerful than rushing.</li>
+    <li><strong>Don't argue with Derek.</strong> Go to the numbers. "Let me show you the breakdown."</li>
+    <li><strong>Reference Dan constantly.</strong> "As Dan's analysis confirmed…" is the most powerful phrase here.</li>
+    <li><strong>Analyst deck is ready</strong> — don't show it unless asked. Stay on the exec flow.</li>
+    <li><strong>If Ethan jumps in</strong> on deposit-as-revenue framing, let him run with it.</li>
+    <li><strong>Close with action:</strong> "Let's finalize the rev share and get legal moving" — not "should we move forward?"</li>
+  </ul>
+</div>
+
+</div>
+</body>
+</html>
