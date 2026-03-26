@@ -96,6 +96,9 @@ tfoot td{font-weight:800;border-top:2px solid #e2e5ea;padding:12px 10px}
 .pool-table td.neg{background:#fee2e2;color:#991b1b}
 .pool-table td.zero{background:#fef3c7;color:#92400e}
 .pool-table tr:hover td{opacity:0.85}
+.pool-table td.current{outline:3px solid #0168fa;outline-offset:-2px;z-index:1;position:relative;font-weight:900;font-size:12px;background:#dbeafe !important;color:#1e40af !important}
+.pool-table tr.current-row td:first-child{background:#eff6ff;color:#0168fa}
+.pool-table th.current-col{color:#0168fa;background:#eff6ff}
 
 .be-table{margin-top:6px}
 .be-table td{text-align:center;font-size:14px;font-weight:800;color:#0168fa;background:#eff6ff}
@@ -503,9 +506,12 @@ function calcPool() {
   const months = [];
   for (let m = 2; m <= Math.min(lease, 14); m++) months.push(m);
 
+  const curSkipRate = +sliders.slSkipRate.value;
+  const curSkipMonth = +sliders.slSkipMonth.value;
+
   // Header
   const thead = document.getElementById('poolHead');
-  thead.innerHTML = '<th>Skip %</th>' + months.map(m => `<th>Mo ${m}</th>`).join('');
+  thead.innerHTML = '<th>Skip %</th>' + months.map(m => `<th${m === curSkipMonth ? ' class="current-col"' : ''}>Mo ${m}</th>`).join('');
 
   // Body
   const tbody = document.getElementById('poolBody');
@@ -516,6 +522,7 @@ function calcPool() {
 
   for (let sr = 0; sr <= 30; sr++) {
     const tr = document.createElement('tr');
+    if (sr === curSkipRate) tr.classList.add('current-row');
     let rowHtml = `<td>${sr}%</td>`;
 
     months.forEach(m => {
@@ -548,12 +555,17 @@ function calcPool() {
         ? '-$' + Math.abs(Math.round(net)).toLocaleString()
         : '$' + Math.round(net).toLocaleString();
 
-      rowHtml += `<td class="${cls}">${formatted}</td>`;
+      const isCurrent = sr === curSkipRate && m === curSkipMonth;
+      rowHtml += `<td class="${cls}${isCurrent ? ' current' : ''}">${formatted}</td>`;
     });
 
     tr.innerHTML = rowHtml;
     tbody.appendChild(tr);
   }
+
+  // Scroll current cell into view
+  const currentCell = document.querySelector('.pool-table td.current');
+  if (currentCell) currentCell.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
 
   // Break-even row
   const beHead = document.getElementById('beHead');
