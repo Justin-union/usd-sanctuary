@@ -124,7 +124,7 @@ tfoot td{font-weight:800;border-top:2px solid #e2e5ea;padding:12px 10px}
   <div class="control">
     <label>Total Units Enrolled</label>
     <div class="val-row">
-      <input type="range" id="slUnits" min="50" max="10000" step="10" value="217">
+      <input type="range" id="slUnits" min="50" max="10000" step="1" value="217">
       <div class="val" id="vUnits">217</div>
       <div class="unit">units</div>
     </div>
@@ -132,7 +132,7 @@ tfoot td{font-weight:800;border-top:2px solid #e2e5ea;padding:12px 10px}
   <div class="control">
     <label>Deposit Amount</label>
     <div class="val-row">
-      <input type="range" id="slDeposit" min="300" max="2000" step="50" value="1350">
+      <input type="range" id="slDeposit" min="300" max="2000" step="50" value="900">
       <div class="val" id="vDeposit">$900</div>
     </div>
   </div>
@@ -318,10 +318,10 @@ const sliders = {};
 ids.forEach(id => { sliders[id] = document.getElementById(id); });
 
 const presets = {
-  sanctuary: { units:217, deposit:1350, lease:14, skipRate:16, skipMonth:6, damages:2400, adopt:100 },
-  conservative: { units:217, deposit:1350, lease:14, skipRate:10, skipMonth:7, damages:1800, adopt:100 },
-  stressed: { units:217, deposit:1350, lease:12, skipRate:25, skipMonth:4, damages:3500, adopt:100 },
-  portfolio: { units:5000, deposit:1350, lease:14, skipRate:10, skipMonth:7, damages:2000, adopt:100 }
+  sanctuary: { units:217, deposit:900, lease:14, skipRate:16, skipMonth:6, damages:2400, adopt:100 },
+  conservative: { units:217, deposit:900, lease:14, skipRate:10, skipMonth:7, damages:1800, adopt:100 },
+  stressed: { units:217, deposit:900, lease:12, skipRate:25, skipMonth:4, damages:3500, adopt:100 },
+  portfolio: { units:5000, deposit:900, lease:14, skipRate:10, skipMonth:7, damages:2000, adopt:100 }
 };
 
 function applyPreset(name) {
