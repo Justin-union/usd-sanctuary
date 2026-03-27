@@ -168,7 +168,8 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
       <button id="themeToggle" onclick="toggleTheme()" style="margin-right:12px">🌙 Dark</button>
       <button id="jumpEnd" onclick="jumpToEnd()">⏭ Skip to Summary</button>
       <span class="lbl" style="margin-left:12px">Filter</span>
-      <button id="fAll" class="on" onclick="setFilter('all')">All (82)</button>
+      <button id="fAll" class="on" onclick="setFilter('all')">All</button>
+      <button id="fCollections" onclick="setFilter('collections')">Collections Accounts</button>
       <button id="fEarly" onclick="setFilter('early')">Early Move-Outs</button>
       <button id="fEpPaid" onclick="setFilter('ep-paid')">eDeposit Paid</button>
       <button id="fEpDenied" onclick="setFilter('ep-denied')">eDeposit Denied</button>
@@ -375,6 +376,7 @@ let activeFilter='all';
 let filtered=[];
 
 function passesFilter(a){
+  if(activeFilter==='collections')return a.bal>0;
   if(activeFilter==='early')return a.r==='Early Move-Out';
   if(activeFilter==='ep-paid')return a.ep>0;
   if(activeFilter==='ep-denied')return a.ep===0&&a.bal>0;
@@ -385,16 +387,24 @@ function passesFilter(a){
 function setFilter(f){
   activeFilter=f;
   document.querySelectorAll('.controls button').forEach(b=>b.classList.remove('on'));
-  document.getElementById(f==='all'?'fAll':f==='early'?'fEarly':f==='ep-paid'?'fEpPaid':f==='ep-denied'?'fEpDenied':'fClean').classList.add('on');
+  const btnId=f==='all'?'fAll'
+    :f==='collections'?'fCollections'
+    :f==='early'?'fEarly'
+    :f==='ep-paid'?'fEpPaid'
+    :f==='ep-denied'?'fEpDenied'
+    :'fClean';
+  document.getElementById(btnId).classList.add('on');
   renderCards();
 }
 
 function updateFilterCounts(){
+  const collectionsN=D.filter(a=>a.bal>0).length;
   const earlyN=D.filter(a=>a.r==='Early Move-Out').length;
   const epPaidN=D.filter(a=>a.ep>0).length;
   const epDeniedN=D.filter(a=>a.ep===0&&a.bal>0).length;
   const cleanN=D.filter(a=>a.r==='Lease Complete').length;
   document.getElementById('fAll').textContent='All ('+D.length+')';
+  document.getElementById('fCollections').textContent='Collections Accounts ('+collectionsN+')';
   document.getElementById('fEarly').textContent='Early Move-Outs ('+earlyN+')';
   document.getElementById('fEpPaid').textContent='eDeposit Paid ('+epPaidN+')';
   document.getElementById('fEpDenied').textContent='eDeposit Denied ('+epDeniedN+')';
