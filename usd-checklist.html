@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>USD Launch Checklist — Union</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --u-100:#F4F8FF; --u-200:#DDEAFF; --u-300:#88B3FB; --u-400:#468BFF;
+    --u-500:#126BF9; --u-600:#014EBF; --u-700:#033480; --u-800:#061530;
+    --n-0:#FFFFFF; --n-100:#F8F8FA; --n-200:#E9EDF4; --n-250:#E2E8F1;
+    --n-300:#CBD3DF; --n-400:#A3ADBD; --n-500:#848EA0; --n-600:#5C687B;
+    --n-700:#2D3A4E; --n-800:#0D182C;
+    --green:#4FD35E; --gold:#E99903; --red:#ED3533;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--n-800);
+    background: var(--n-100);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--u-500); text-decoration: none; }
+  a:hover { color: var(--u-600); text-decoration: underline; }
+
+  /* Top bar */
+  .topbar {
+    background: var(--u-800);
+    color: var(--n-0);
+    border-bottom: 3px solid var(--u-500);
+  }
+  .topbar-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 14px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .logo {
+    font-weight: 700;
+    font-size: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .logo-mark {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    background: var(--u-500);
+    display: grid; place-items: center;
+    font-size: 15px; color: white; font-weight: 700;
+  }
+  .topnav { display: flex; gap: 20px; font-size: 14px; }
+  .topnav a { color: rgba(255,255,255,0.7); font-weight: 500; }
+  .topnav a.active { color: white; }
+  .topnav a:hover { color: white; text-decoration: none; }
+
+  /* Property strip */
+  .property-strip {
+    background: var(--n-0);
+    border-bottom: 1px solid var(--n-200);
+    padding: 16px 28px;
+  }
+  .property-strip-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.5fr 0.8fr 0.8fr 1fr;
+    gap: 14px;
+    align-items: end;
+  }
+  .field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .field label {
+    font-size: 11px;
+    color: var(--n-500);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+  }
+  .field input, .field select {
+    padding: 8px 12px;
+    border: 1px solid var(--n-300);
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--n-800);
+    background: var(--n-0);
+    min-width: 0;
+  }
+  .field input:focus, .field select:focus {
+    outline: none; border-color: var(--u-500);
+    box-shadow: 0 0 0 3px rgba(18,107,249,0.12);
+  }
+
+  /* Container */
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 28px 28px 64px;
+  }
+
+  /* Status hero */
+  .status-hero {
+    background: var(--n-0);
+    border: 1px solid var(--n-200);
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 24px rgba(13,24,44,0.05);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 28px;
+    align-items: center;
+  }
+  .ring-wrap {
+    position: relative;
+    width: 110px; height: 110px;
+  }
+  .ring-wrap svg { transform: rotate(-90deg); }
+  .ring-track { stroke: var(--n-200); }
+  .ring-fill {
+    stroke: var(--u-500);
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.5s ease;
+  }
+  .ring-pct {
+    position: absolute;
+    inset: 0;
+    display: grid; place-items: center;
+    font-weight: 700;
+    font-size: 26px;
+    color: var(--n-800);
+  }
+  .ring-pct .x {
+    font-size: 12px;
+    color: var(--n-500);
+    margin-top: 2px;
+    font-weight: 500;
+  }
+  .status-info h1 {
+    margin: 0 0 4px;
+    font-size: 24px;
+    color: var(--n-800);
+    letter-spacing: -0.01em;
+  }
+  .status-info .sub {
+    color: var(--n-600);
+    font-size: 14.5px;
+    margin: 0 0 12px;
+  }
+  .status-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .meta-pill {
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: var(--n-100);
+    color: var(--n-700);
+    font-weight: 500;
+  }
+  .meta-pill.brand { background: var(--u-100); color: var(--u-600); }
+  .meta-pill.warn { background: #FFF7E8; color: #8B5B00; }
+  .meta-pill.ok { background: #E9F8EC; color: #1F8E32; }
+
+  .status-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--n-300);
+    background: var(--n-0);
+    color: var(--n-700);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.12s;
+    justify-content: center;
+  }
+  .btn:hover { background: var(--n-100); border-color: var(--n-400); text-decoration: none; }
+  .btn.primary { background: var(--u-500); color: white; border-color: var(--u-500); }
+  .btn.primary:hover { background: var(--u-600); border-color: var(--u-600); }
+  .btn.danger:hover { background: #FCE9E9; border-color: var(--red); color: var(--red); }
+
+  /* Phase header */
+  .phase-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 32px 0 14px;
+  }
+  .phase-title h2 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--n-800);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .phase-title .phase-count {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--n-200);
+    color: var(--n-700);
+    font-weight: 600;
+  }
+  .phase-title .phase-count.complete {
+    background: #E9F8EC; color: #1F8E32;
+  }
+  .phase-title hr {
+    flex: 1;
+    border: none;
+    border-top: 1px solid var(--n-200);
+    margin: 0;
+  }
+
+  /* Step grid */
+  .step-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+  }
+  .step-card {
+    background: var(--n-0);
+    border: 1px solid var(--n-200);
+    border-radius: 12px;
+    padding: 16px 18px;
+    cursor: pointer;
+    transition: all 0.12s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+  }
+  .step-card:hover {
+    border-color: var(--u-400);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(18,107,249,0.10);
+    text-decoration: none;
+  }
+  .step-card .top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .step-card .stepnum {
+    font-size: 11px;
+    color: var(--n-500);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+  }
+  .step-card .status {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid var(--n-300);
+    background: var(--n-0);
+    flex-shrink: 0;
+    display: grid; place-items: center;
+  }
+  .step-card.done {
+    background: linear-gradient(180deg, #F2FCF4 0%, #FFFFFF 100%);
+    border-color: #C5EBCB;
+  }
+  .step-card.done .status {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .step-card.done .status::after {
+    content: "✓"; color: white; font-size: 12px; font-weight: 700;
+  }
+  .step-card.partial .status {
+    background: linear-gradient(180deg, var(--gold) 50%, var(--n-0) 50%);
+    border-color: var(--gold);
+  }
+  .step-card .title-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .step-card .step-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--u-100);
+    color: var(--u-500);
+    display: grid; place-items: center;
+    flex-shrink: 0;
+  }
+  .step-card.done .step-icon {
+    background: #E9F8EC;
+    color: #1F8E32;
+  }
+  .step-card .step-icon svg { width: 16px; height: 16px; }
+  .step-card h3 {
+    margin: 0;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--n-800);
+    line-height: 1.3;
+  }
+  .step-card .desc {
+    font-size: 13px;
+    color: var(--n-600);
+    line-height: 1.45;
+    margin: 0;
+  }
+  .step-card .progress-tag {
+    font-size: 11.5px;
+    color: var(--n-500);
+    margin-top: auto;
+    padding-top: 6px;
+    font-weight: 500;
+  }
+  .step-card.done .progress-tag { color: #1F8E32; }
+  .step-card .progress-tag .bar {
+    display: inline-block;
+    width: 56px; height: 4px;
+    background: var(--n-200);
+    border-radius: 2px;
+    overflow: hidden;
+    vertical-align: middle;
+    margin-left: 4px;
+  }
+  .step-card .progress-tag .bar-fill {
+    display: block;
+    height: 100%;
+    background: var(--u-500);
+    transition: width 0.3s;
+  }
+  .step-card.done .progress-tag .bar-fill { background: var(--green); }
+
+  /* Quick refs section */
+  .quick-refs {
+    background: var(--n-0);
+    border: 1px solid var(--n-200);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-top: 28px;
+  }
+  .quick-refs h3 {
+    margin: 0 0 12px;
+    font-size: 13px;
+    color: var(--n-600);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+  }
+  .ref-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 8px;
+  }
+  .ref-link {
+    padding: 8px 12px;
+    border-radius: 7px;
+    background: var(--n-100);
+    border: 1px solid var(--n-200);
+    color: var(--n-700);
+    font-size: 12.5px;
+    font-weight: 500;
+    transition: all 0.12s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ref-link:hover {
+    background: var(--u-100);
+    border-color: var(--u-300);
+    color: var(--u-600);
+    text-decoration: none;
+  }
+  .ref-link::after { content: "↗"; color: var(--n-400); font-size: 11px; margin-left: auto; }
+  .ref-link:hover::after { color: var(--u-500); }
+
+  /* State-rule strip */
+  .state-strip {
+    margin-top: 24px;
+    background: var(--u-100);
+    border: 1px solid var(--u-200);
+    border-radius: 12px;
+    padding: 16px 22px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .state-strip .law-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: var(--u-500);
+    color: white;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+  }
+  .state-strip .label {
+    font-size: 11.5px;
+    color: var(--u-600);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+  }
+  .state-strip .value {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--n-800);
+  }
+  .state-strip .cite {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--n-600);
+    margin-top: 2px;
+  }
+  .state-strip .col { display: flex; flex-direction: column; }
+
+  /* Final card */
+  .final-card {
+    background: linear-gradient(135deg, var(--u-100) 0%, #ECF3FF 100%);
+    border: 1px solid var(--u-200);
+    border-radius: 16px;
+    padding: 28px 32px;
+    text-align: center;
+    margin-top: 28px;
+  }
+  .final-card.complete {
+    background: linear-gradient(135deg, #E9F8EC 0%, #DCFEE2 100%);
+    border-color: #9BE0A6;
+  }
+  .final-card .big {
+    font-size: 44px; line-height: 1;
+    margin-bottom: 12px;
+  }
+  .final-card h3 {
+    margin: 0 0 6px;
+    font-size: 20px;
+    color: var(--n-800);
+  }
+  .final-card p {
+    margin: 0;
+    color: var(--n-700);
+    font-size: 14px;
+  }
+
+  @media (max-width: 880px) {
+    .property-strip-inner { grid-template-columns: 1fr 1fr; }
+    .status-hero { grid-template-columns: 1fr; text-align: center; }
+    .ring-wrap { margin: 0 auto; }
+    .status-actions { flex-direction: row; justify-content: center; }
+    .topnav a:nth-of-type(3) { display: none; }
+  }
+
+  @media print {
+    .topbar, .property-strip, .status-actions, .btn { display: none; }
+    .status-hero, .step-card, .final-card { box-shadow: none; page-break-inside: avoid; }
+    body { background: white; }
+    .step-card { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="logo">
+      <span class="logo-mark">U</span>
+      <span>USD Launch Checklist</span>
+    </div>
+    <nav class="topnav">
+      <a href="usd-setup.html">Wizard</a>
+      <a href="usd-checklist.html" class="active">Checklist</a>
+      <a href="https://liftlytics.atlassian.net/browse/CRM-3132" target="_blank">CRM-3132 ↗</a>
+    </nav>
+  </div>
+</header>
+
+<div class="property-strip">
+  <div class="property-strip-inner">
+    <div class="field">
+      <label for="propName">Property</label>
+      <input id="propName" placeholder="e.g. The Pointe at South Mountain" />
+    </div>
+    <div class="field">
+      <label for="propState">State</label>
+      <select id="propState">
+        <option value="">Select…</option>
+        <option value="AZ">Arizona (AZ)</option>
+        <option value="CA">California (CA)</option>
+        <option value="CO">Colorado (CO)</option>
+        <option value="FL">Florida (FL)</option>
+        <option value="NV">Nevada (NV)</option>
+        <option value="NY">New York (NY)</option>
+        <option value="TX">Texas (TX)</option>
+        <option value="UT">Utah (UT)</option>
+        <option value="WA">Washington (WA)</option>
+        <option value="OTHER">Other</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="propPMS">PMS</label>
+      <select id="propPMS">
+        <option value="ResMan">ResMan</option>
+        <option value="Yardi">Yardi (roadmap)</option>
+        <option value="RealPage">RealPage (roadmap)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="propCustomer">Customer</label>
+      <input id="propCustomer" placeholder="e.g. Mark Taylor" />
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Status hero -->
+  <div class="status-hero">
+    <div class="ring-wrap">
+      <svg width="110" height="110" viewBox="0 0 110 110">
+        <circle class="ring-track" cx="55" cy="55" r="48" stroke-width="9" fill="none"/>
+        <circle class="ring-fill" id="ringFill" cx="55" cy="55" r="48" stroke-width="9" fill="none"
+                stroke-dasharray="301.59" stroke-dashoffset="301.59"/>
+      </svg>
+      <div class="ring-pct"><div><span id="pctNum">0%</span><div class="x" id="pctSubtext">0 of 12 done</div></div></div>
+    </div>
+    <div class="status-info">
+      <h1 id="statusTitle">USD Launch Checklist</h1>
+      <p class="sub" id="statusSub">Quick-scan view of every step. Status syncs with the setup wizard.</p>
+      <div class="status-meta" id="statusMeta">
+        <!-- Pills inserted by JS -->
+      </div>
+    </div>
+    <div class="status-actions">
+      <a class="btn primary" href="usd-setup.html">Open wizard →</a>
+      <button class="btn" onclick="window.print()">Print</button>
+      <button class="btn danger" onclick="resetAll()">Reset</button>
+    </div>
+  </div>
+
+  <!-- State law strip -->
+  <div class="state-strip" id="stateStrip" style="display:none;">
+    <div class="law-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V10M19 21V10M9 21V13h6v8M3 10h18M5 10l7-7 7 7"/></svg>
+    </div>
+    <div class="col">
+      <span class="label">State refund window</span>
+      <span class="value" id="refundValue">—</span>
+    </div>
+    <div class="col">
+      <span class="label">Statute</span>
+      <span class="cite" id="refundCite">Select a state</span>
+    </div>
+    <div class="col" style="flex:1;">
+      <span class="label">Notes</span>
+      <span style="font-size:13px;color:var(--n-700);" id="refundNote">—</span>
+    </div>
+  </div>
+
+  <!-- Phase 1: Setup -->
+  <div class="phase-title">
+    <h2>Setup · Prior to Launch</h2>
+    <span class="phase-count" id="phase1Count">0 / 7</span>
+    <hr/>
+  </div>
+  <div class="step-grid" id="phase1Grid"></div>
+
+  <!-- Phase 2: Launch Day -->
+  <div class="phase-title">
+    <h2>Launch Day</h2>
+    <span class="phase-count" id="phase2Count">0 / 5</span>
+    <hr/>
+  </div>
+  <div class="step-grid" id="phase2Grid"></div>
+
+  <!-- Quick refs -->
+  <section class="quick-refs">
+    <h3>Quick references</h3>
+    <div class="ref-grid">
+      <a class="ref-link" href="https://liftlytics.atlassian.net/wiki/spaces/LLC/pages/2561441797/USD+Ledger+Rulebook" target="_blank">Ledger Rulebook</a>
+      <a class="ref-link" href="https://liftlytics.atlassian.net/wiki/spaces/LLC/pages/2523070466/Security+Deposit+Fund+Flow+and+Ledger+Mapping" target="_blank">Fund Flow</a>
+      <a class="ref-link" href="https://liftlytics.atlassian.net/wiki/spaces/LLC/pages/2269085697/Security+Deposit+Claims+Portal" target="_blank">Claims Portal SOP</a>
+      <a class="ref-link" href="https://liftlytics.atlassian.net/wiki/spaces/LLC/pages/2667905096/Security+Deposit+Report+Dashboard" target="_blank">Report Dashboard</a>
+      <a class="ref-link" href="https://liftlytics.atlassian.net/wiki/spaces/LLC/pages/2372304902/Security+Deposit+Post+Charges+ResMan" target="_blank">Post Charges (ResMan)</a>
+      <a class="ref-link" href="https://liftlytics.atlassian.net/wiki/spaces/LLC/pages/2741501954/USD+Standalone" target="_blank">USD Standalone (eng)</a>
+      <a class="ref-link" href="https://docs.google.com/spreadsheets/d/17NiveBEaaV4fezS7hMbz82Gji2rK8YqZOEYK2MigbHY/edit?usp=sharing" target="_blank">Launches sheet</a>
+      <a class="ref-link" href="https://liftlytics.atlassian.net/browse/CRM-3132" target="_blank">CRM-3132 epic</a>
+    </div>
+  </section>
+
+  <div class="final-card" id="finalCard">
+    <div class="big">🚀</div>
+    <h3 id="finalTitle">Launch in progress</h3>
+    <p id="finalSub">When every card is green, USD is ready to go live.</p>
+  </div>
+
+</div>
+
+<script>
+  // ============================================================
+  // Mirror of wizard step definitions (must stay in sync)
+  // ============================================================
+  const STEPS = [
+    { phase:'Setup', idx:0, title:'Welcome',                desc:'Fill the property strip; review the lifecycle.',          icon:'home',         keys:[],                                checkIfWelcomed:true },
+    { phase:'Setup', idx:1, title:'Confirm the request',    desc:'Validate intake, capture launch date.',                   icon:'inbox',        keys:['req-1','req-2','req-3'] },
+    { phase:'Setup', idx:2, title:'Add property to Union',  desc:'PMS ID, address, timezone, synced email.',                icon:'building',     keys:['ap-1','ap-2','ap-3','ap-4','ap-5'] },
+    { phase:'Setup', idx:3, title:'Grant Ledger UI access', desc:'Customer team can view the live Wells Fargo ledger.',     icon:'layers',       keys:['lg-1','lg-2','lg-3'] },
+    { phase:'Setup', idx:4, title:'USD Property Settings',  desc:'Pricing, charge push, state-aware refund window.',        icon:'settings',     keys:[],                                checkIfWelcomed:true, isSettings:true },
+    { phase:'Setup', idx:5, title:'Lease & app assets',     desc:'Addendum, agreement, application toggle.',                icon:'file',         keys:['ls-1','ls-2','ls-3','ls-4'] },
+    { phase:'Setup', idx:6, title:'Claims Portal',          desc:'Submitter / Approver / Viewer roles.',                    icon:'users',        keys:['cl-1','cl-2','cl-3','cl-4'] },
+    { phase:'Setup', idx:7, title:'Launches tracker',       desc:'Row added, billing email confirmed, ready.',              icon:'tracker',      keys:['tr-1','tr-2','tr-3'] },
+
+    { phase:'Launch', idx:8,  title:'Activate USD',           desc:'Fill launch date, activate the product.',                icon:'power',        keys:['act-1','act-2'] },
+    { phase:'Launch', idx:9,  title:'Enable at application',  desc:'Applicants see USD as a deposit option.',                icon:'toggle',       keys:['at-1','at-2'] },
+    { phase:'Launch', idx:10, title:'Verify enrollment',      desc:'Mock-resident test of the full flow.',                   icon:'check-circle', keys:['vf-1','vf-2','vf-3','vf-4'] },
+    { phase:'Launch', idx:11, title:'Announce launch',        desc:'Slack post, tracker → Live, billing report set.',        icon:'megaphone',    keys:['an-1','an-2','an-3','an-4'] },
+  ];
+
+  // State refund rules — must match wizard
+  const STATE_RULES = {
+    AZ: { refundDays: 14, refundUnit: 'business days', cite: 'A.R.S. § 33-1321(D)' },
+    CA: { refundDays: 21, refundUnit: 'calendar days', cite: 'Cal. Civ. Code § 1950.5(g)' },
+    CO: { refundDays: 30, refundUnit: 'calendar days', cite: 'C.R.S. § 38-12-103(1)', note: 'Lease may extend to 60' },
+    FL: { refundDays: 15, refundUnit: 'calendar days', cite: 'Fla. Stat. § 83.49(3)(a)', note: '30 days if claim notice sent' },
+    NV: { refundDays: 30, refundUnit: 'calendar days', cite: 'NRS 118A.242(4)' },
+    NY: { refundDays: 14, refundUnit: 'calendar days', cite: 'NY GOL § 7-108(1-a)(e)' },
+    TX: { refundDays: 30, refundUnit: 'calendar days', cite: 'Tex. Prop. Code § 92.103' },
+    UT: { refundDays: 30, refundUnit: 'calendar days', cite: 'U.C.A. § 57-17-3' },
+    WA: { refundDays: 21, refundUnit: 'calendar days', cite: 'RCW 59.18.280' },
+    OTHER: { refundDays: null, refundUnit: '', cite: 'Verify with legal', note: 'Statute not preloaded — research before launch' },
+  };
+
+  // ============================================================
+  // Persistence (shared with wizard)
+  // ============================================================
+  function storageKey() {
+    const name = (document.getElementById('propName').value || '').trim() || 'default';
+    const state = (document.getElementById('propState').value || '').trim();
+    return 'usd-wizard::' + name + '::' + state;
+  }
+  function getState() {
+    try { return JSON.parse(localStorage.getItem(storageKey()) || '{}'); }
+    catch(e) { return {}; }
+  }
+
+  // ============================================================
+  // Icons
+  // ============================================================
+  function icon(name) {
+    const lib = {
+      home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v11h14V10"/></svg>',
+      inbox: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>',
+      building: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22V12h6v10"/></svg>',
+      layers: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>',
+      settings: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+      file: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+      users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+      tracker: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>',
+      power: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>',
+      toggle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="5" width="22" height="14" rx="7"/><circle cx="16" cy="12" r="3" fill="currentColor"/></svg>',
+      'check-circle': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+      megaphone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 22 22 3 13"/><line x1="11" y1="11" x2="11" y2="22"/></svg>',
+    };
+    return lib[name] || lib.home;
+  }
+
+  // ============================================================
+  // Status calculation
+  // ============================================================
+  function stepStatus(step) {
+    const s = getState();
+    // Settings step is "done" when refundDays is set (smart proxy)
+    if (step.isSettings) {
+      const filled = !!s.installmentMonths && !!s.monthlyFee && !!s.refundDays;
+      return { done: filled, partial: !filled && (s.installmentMonths || s.monthlyFee || s.refundDays), checked: 0, total: 0 };
+    }
+    if (step.checkIfWelcomed) {
+      return { done: !!s['__welcomed'] || step.idx > 0, partial: false, checked: 0, total: 0 };
+    }
+    if (!step.keys || step.keys.length === 0) {
+      return { done: !!s['__step' + step.idx], partial: false, checked: 0, total: 0 };
+    }
+    const checked = step.keys.filter(k => s[k]).length;
+    const total = step.keys.length;
+    return { done: checked === total, partial: checked > 0 && checked < total, checked, total };
+  }
+
+  // ============================================================
+  // Render
+  // ============================================================
+  function render() {
+    const phase1Grid = document.getElementById('phase1Grid');
+    const phase2Grid = document.getElementById('phase2Grid');
+    phase1Grid.innerHTML = '';
+    phase2Grid.innerHTML = '';
+
+    let p1Done = 0, p2Done = 0;
+    let totalDone = 0;
+
+    STEPS.forEach(step => {
+      const st = stepStatus(step);
+      const isDone = st.done;
+      const isPartial = st.partial;
+      if (isDone) totalDone++;
+      if (step.phase === 'Setup' && isDone) p1Done++;
+      if (step.phase === 'Launch' && isDone) p2Done++;
+
+      const progress = st.total > 0
+        ? `<div class="progress-tag">${st.checked}/${st.total} sub-tasks <span class="bar"><span class="bar-fill" style="width:${(st.checked/st.total)*100}%"></span></span></div>`
+        : (isDone ? `<div class="progress-tag">Complete</div>` : '');
+
+      const cardHTML = `
+        <a class="step-card ${isDone ? 'done' : ''} ${isPartial ? 'partial' : ''}" href="usd-setup.html#step-${step.idx}" onclick="setCurrentStep(${step.idx})">
+          <div class="top-row">
+            <span class="stepnum">Step ${step.idx + 1}</span>
+            <div class="status"></div>
+          </div>
+          <div class="title-row">
+            <div class="step-icon">${icon(step.icon)}</div>
+            <h3>${step.title}</h3>
+          </div>
+          <p class="desc">${step.desc}</p>
+          ${progress}
+        </a>
+      `;
+
+      if (step.phase === 'Setup') phase1Grid.insertAdjacentHTML('beforeend', cardHTML);
+      else phase2Grid.insertAdjacentHTML('beforeend', cardHTML);
+    });
+
+    // Phase counts
+    const p1Total = STEPS.filter(s => s.phase === 'Setup').length;
+    const p2Total = STEPS.filter(s => s.phase === 'Launch').length;
+    const p1El = document.getElementById('phase1Count');
+    const p2El = document.getElementById('phase2Count');
+    p1El.textContent = `${p1Done} / ${p1Total}`;
+    p2El.textContent = `${p2Done} / ${p2Total}`;
+    p1El.classList.toggle('complete', p1Done === p1Total);
+    p2El.classList.toggle('complete', p2Done === p2Total);
+
+    // Progress ring
+    const totalSteps = STEPS.length;
+    const pct = Math.round(totalDone / totalSteps * 100);
+    const CIRC = 2 * Math.PI * 48;
+    document.getElementById('ringFill').setAttribute('stroke-dashoffset', CIRC * (1 - pct/100));
+    document.getElementById('pctNum').textContent = pct + '%';
+    document.getElementById('pctSubtext').textContent = totalDone + ' of ' + totalSteps + ' done';
+
+    // Status title
+    const propName = document.getElementById('propName').value;
+    const propState = document.getElementById('propState').value;
+    const titleEl = document.getElementById('statusTitle');
+    const subEl = document.getElementById('statusSub');
+    const finalCard = document.getElementById('finalCard');
+    const finalTitle = document.getElementById('finalTitle');
+    const finalSub = document.getElementById('finalSub');
+    const finalBig = finalCard.querySelector('.big');
+
+    if (propName) {
+      titleEl.textContent = propName;
+      const parts = [];
+      if (propState) parts.push(propState);
+      const cust = document.getElementById('propCustomer').value;
+      if (cust) parts.push(cust);
+      const pms = document.getElementById('propPMS').value;
+      if (pms) parts.push(pms);
+      subEl.textContent = parts.join(' · ') || 'USD launch tracker';
+    } else {
+      titleEl.textContent = 'USD Launch Checklist';
+      subEl.textContent = 'Fill the property strip above to start.';
+    }
+
+    if (pct === 100) {
+      finalCard.classList.add('complete');
+      finalTitle.textContent = '🎉 USD is live';
+      finalSub.textContent = 'All steps complete. Property is launched.';
+      finalBig.textContent = '🎉';
+    } else if (pct > 50) {
+      finalCard.classList.remove('complete');
+      finalTitle.textContent = 'In the home stretch';
+      finalSub.textContent = `${totalSteps - totalDone} steps left — keep going.`;
+      finalBig.textContent = '🏁';
+    } else {
+      finalCard.classList.remove('complete');
+      finalTitle.textContent = 'Launch in progress';
+      finalSub.textContent = 'When every card is green, USD is ready to go live.';
+      finalBig.textContent = '🚀';
+    }
+
+    // Status meta pills
+    renderStatusMeta();
+
+    // State law strip
+    renderStateStrip();
+  }
+
+  function renderStatusMeta() {
+    const s = getState();
+    const meta = document.getElementById('statusMeta');
+    meta.innerHTML = '';
+    const propState = document.getElementById('propState').value;
+
+    if (s.__launchDate) {
+      meta.insertAdjacentHTML('beforeend', `<span class="meta-pill brand">Launch ${s.__launchDate}</span>`);
+    }
+    if (s.monthlyFee) {
+      meta.insertAdjacentHTML('beforeend', `<span class="meta-pill">$${s.monthlyFee}/mo fee</span>`);
+    }
+    if (s.refundDays && propState) {
+      const rule = STATE_RULES[propState];
+      const unit = rule ? rule.refundUnit : 'days';
+      meta.insertAdjacentHTML('beforeend', `<span class="meta-pill">${s.refundDays} ${unit} refund</span>`);
+    }
+    if (s.installmentMonths) {
+      meta.insertAdjacentHTML('beforeend', `<span class="meta-pill">${s.installmentMonths}-mo installments</span>`);
+    }
+    // Status badge
+    const allDone = STEPS.every(st => stepStatus(st).done);
+    if (allDone) {
+      meta.insertAdjacentHTML('beforeend', `<span class="meta-pill ok">● Live</span>`);
+    } else if (s.__launchDate) {
+      meta.insertAdjacentHTML('beforeend', `<span class="meta-pill warn">● Launching</span>`);
+    } else if (propState && document.getElementById('propName').value) {
+      meta.insertAdjacentHTML('beforeend', `<span class="meta-pill">● In setup</span>`);
+    }
+  }
+
+  function renderStateStrip() {
+    const propState = document.getElementById('propState').value;
+    const strip = document.getElementById('stateStrip');
+    if (!propState) { strip.style.display = 'none'; return; }
+    const rule = STATE_RULES[propState];
+    strip.style.display = 'flex';
+    document.getElementById('refundValue').textContent = rule.refundDays
+      ? `${rule.refundDays} ${rule.refundUnit}`
+      : 'Verify with legal';
+    document.getElementById('refundCite').textContent = rule.cite;
+    document.getElementById('refundNote').textContent = rule.note || '—';
+  }
+
+  function setCurrentStep(idx) {
+    // Update the wizard's "currentStep" pointer so opening it lands on this step
+    const s = getState();
+    s.__currentStep = idx;
+    localStorage.setItem(storageKey(), JSON.stringify(s));
+  }
+
+  function resetAll() {
+    if (!confirm('Reset all checkboxes and inputs for this property?')) return;
+    localStorage.removeItem(storageKey());
+    render();
+  }
+
+  // ============================================================
+  // Property strip
+  // ============================================================
+  const propInputs = ['propName', 'propState', 'propPMS', 'propCustomer'];
+  function loadPropertyStrip() {
+    const last = JSON.parse(localStorage.getItem('usd-wizard::last') || '{}');
+    propInputs.forEach(id => {
+      const el = document.getElementById(id);
+      if (last[id] !== undefined) el.value = last[id];
+    });
+  }
+  function savePropertyStrip() {
+    const last = {};
+    propInputs.forEach(id => last[id] = document.getElementById(id).value);
+    localStorage.setItem('usd-wizard::last', JSON.stringify(last));
+  }
+  propInputs.forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      savePropertyStrip();
+      render();
+    });
+  });
+
+  // Re-render on focus (catches updates made in the wizard tab)
+  window.addEventListener('focus', render);
+
+  // ============================================================
+  // Boot
+  // ============================================================
+  loadPropertyStrip();
+  render();
+</script>
+
+</body>
+</html>

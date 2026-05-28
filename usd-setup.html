@@ -1,0 +1,2007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>USD Setup Wizard — Union</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --u-100:#F4F8FF; --u-200:#DDEAFF; --u-300:#88B3FB; --u-400:#468BFF;
+    --u-500:#126BF9; --u-600:#014EBF; --u-700:#033480; --u-800:#061530;
+    --n-0:#FFFFFF; --n-100:#F8F8FA; --n-200:#E9EDF4; --n-250:#E2E8F1;
+    --n-300:#CBD3DF; --n-400:#A3ADBD; --n-500:#848EA0; --n-600:#5C687B;
+    --n-700:#2D3A4E; --n-800:#0D182C;
+    --green:#4FD35E; --gold:#E99903; --red:#ED3533; --cyan:#02B3CF;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--n-800);
+    background: var(--n-100);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  a { color: var(--u-500); text-decoration: none; }
+  a:hover { color: var(--u-600); text-decoration: underline; }
+  code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.92em; }
+
+  /* ---------- Top bar ---------- */
+  .topbar {
+    background: var(--u-800);
+    color: var(--n-0);
+    border-bottom: 3px solid var(--u-500);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .topbar-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 14px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .logo {
+    font-weight: 700;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-mark {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    background: var(--u-500);
+    display: grid; place-items: center;
+    font-size: 15px; color: white; font-weight: 700;
+  }
+  .topnav { display: flex; gap: 20px; font-size: 14px; }
+  .topnav a { color: rgba(255,255,255,0.7); font-weight: 500; }
+  .topnav a.active { color: white; }
+  .topnav a:hover { color: white; text-decoration: none; }
+
+  /* ---------- Property setup strip ---------- */
+  .property-strip {
+    background: var(--n-0);
+    border-bottom: 1px solid var(--n-200);
+    padding: 16px 28px;
+    position: sticky;
+    top: 56px;
+    z-index: 40;
+    box-shadow: 0 1px 3px rgba(13,24,44,0.04);
+  }
+  .property-strip-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.5fr 0.8fr 0.8fr 1fr auto;
+    gap: 14px;
+    align-items: end;
+  }
+  .field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .field label {
+    font-size: 11px;
+    color: var(--n-500);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+  }
+  .field input, .field select {
+    padding: 8px 12px;
+    border: 1px solid var(--n-300);
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--n-800);
+    background: var(--n-0);
+    min-width: 0;
+  }
+  .field input:focus, .field select:focus {
+    outline: none;
+    border-color: var(--u-500);
+    box-shadow: 0 0 0 3px rgba(18,107,249,0.12);
+  }
+  .save-indicator {
+    font-size: 12px;
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height: 36px;
+    padding: 0 4px;
+  }
+  .save-indicator.saving { color: var(--n-500); }
+
+  /* ---------- Wizard layout ---------- */
+  .wizard {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px 28px 48px;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 32px;
+  }
+
+  /* ---------- Stepper ---------- */
+  .stepper {
+    position: sticky;
+    top: 168px;
+    align-self: start;
+    max-height: calc(100vh - 188px);
+    overflow-y: auto;
+  }
+  .stepper-group { margin-bottom: 12px; }
+  .stepper-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--n-500);
+    font-weight: 700;
+    padding: 8px 12px;
+    margin-top: 8px;
+  }
+  .step-link {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 12px;
+    align-items: center;
+    padding: 9px 12px;
+    margin: 2px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--n-700);
+    font-size: 13.5px;
+    font-weight: 500;
+    border-left: 3px solid transparent;
+    transition: all 0.12s;
+  }
+  .step-link:hover { background: var(--u-100); color: var(--n-800); }
+  .step-link.current {
+    background: var(--u-100);
+    border-left-color: var(--u-500);
+    color: var(--u-700);
+    font-weight: 600;
+  }
+  .step-dot {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--n-0);
+    border: 1.5px solid var(--n-300);
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--n-600);
+    flex-shrink: 0;
+  }
+  .step-link.current .step-dot {
+    background: var(--u-500);
+    border-color: var(--u-500);
+    color: white;
+  }
+  .step-link.done .step-dot {
+    background: var(--green);
+    border-color: var(--green);
+    color: white;
+  }
+  .step-link.done .step-dot::after {
+    content: "✓"; font-size: 13px; font-weight: 700;
+  }
+  .step-link.done .step-dot .num { display: none; }
+  .step-link.done { color: var(--n-600); }
+
+  /* ---------- Main canvas ---------- */
+  .canvas {
+    background: var(--n-0);
+    border: 1px solid var(--n-200);
+    border-radius: 16px;
+    padding: 40px 48px;
+    box-shadow: 0 4px 24px rgba(13,24,44,0.05);
+    min-height: 560px;
+    display: flex;
+    flex-direction: column;
+  }
+  .step-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    margin-bottom: 28px;
+  }
+  .step-icon {
+    width: 60px; height: 60px;
+    border-radius: 14px;
+    background: var(--u-100);
+    color: var(--u-500);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .step-icon svg { width: 32px; height: 32px; }
+  .step-h h1 {
+    margin: 0 0 4px;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--n-800);
+    letter-spacing: -0.01em;
+  }
+  .step-h .sub {
+    color: var(--n-600);
+    font-size: 15px;
+    max-width: 540px;
+  }
+  .step-h .crumb {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--u-500);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .step-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  /* ---------- Reusable bits ---------- */
+  .action-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--n-300);
+    background: var(--n-0);
+    color: var(--n-700);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.12s;
+  }
+  .btn:hover { background: var(--n-100); border-color: var(--n-400); text-decoration: none; }
+  .btn.primary {
+    background: var(--u-500);
+    color: white;
+    border-color: var(--u-500);
+  }
+  .btn.primary:hover { background: var(--u-600); border-color: var(--u-600); }
+  .btn.ghost {
+    background: transparent;
+    border-color: transparent;
+    color: var(--u-500);
+  }
+  .btn.ghost:hover { background: var(--u-100); border-color: transparent; }
+  .btn svg { width: 14px; height: 14px; }
+
+  .why-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--u-500);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px 0;
+    font-family: inherit;
+    font-weight: 500;
+  }
+  .why-toggle:hover { color: var(--u-600); }
+  .why-content {
+    background: var(--u-100);
+    border-left: 3px solid var(--u-400);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    font-size: 13.5px;
+    color: var(--n-700);
+    line-height: 1.55;
+    display: none;
+  }
+  .why-content.open { display: block; }
+
+  .field-card {
+    background: var(--n-100);
+    border: 1px solid var(--n-200);
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .field-card h4 {
+    margin: 0 0 12px;
+    font-size: 13px;
+    color: var(--n-600);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+  }
+  .smart-field {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 14px;
+    align-items: center;
+    padding: 10px 0;
+    border-top: 1px solid var(--n-250);
+  }
+  .smart-field:first-of-type { border-top: none; padding-top: 0; }
+  .smart-field .lbl {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--n-700);
+  }
+  .smart-field .val {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .smart-field input {
+    flex: 1;
+    padding: 7px 11px;
+    border: 1px solid var(--n-300);
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--n-800);
+    background: var(--n-0);
+  }
+  .smart-field input:focus {
+    outline: none; border-color: var(--u-500);
+    box-shadow: 0 0 0 3px rgba(18,107,249,0.12);
+  }
+  .smart-field .hint {
+    font-size: 11.5px;
+    color: var(--n-500);
+    background: var(--n-200);
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .smart-field .hint.auto { background: var(--u-100); color: var(--u-600); }
+  .smart-field .cite {
+    font-size: 11.5px;
+    color: var(--n-500);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .micro-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .micro-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--n-100);
+    border: 1px solid var(--n-200);
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .micro-list li:hover { background: var(--u-100); border-color: var(--u-200); }
+  .micro-list li.done { background: #E9F8EC; border-color: #C5EBCB; }
+  .micro-list li.done .micro-title { color: var(--n-600); text-decoration: line-through; }
+  .micro-check {
+    width: 20px; height: 20px;
+    border-radius: 5px;
+    border: 1.5px solid var(--n-300);
+    background: var(--n-0);
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: grid;
+    place-items: center;
+  }
+  .micro-list li.done .micro-check {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .micro-list li.done .micro-check::after {
+    content: "✓"; color: white; font-size: 13px; font-weight: 700;
+  }
+  .micro-content { flex: 1; }
+  .micro-title { font-weight: 500; color: var(--n-800); }
+  .micro-sub { font-size: 12.5px; color: var(--n-600); margin-top: 2px; }
+
+  /* ---------- Rich task rows (with captured data) ---------- */
+  .task-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .task-row {
+    background: var(--n-100);
+    border: 1px solid var(--n-200);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    gap: 12px;
+    transition: background 0.12s, border-color 0.12s;
+  }
+  .task-row:hover { border-color: var(--u-300); }
+  .task-row.done {
+    background: linear-gradient(180deg, #F2FCF4 0%, #FFFFFF 100%);
+    border-color: #C5EBCB;
+  }
+  .task-row.done .task-title { color: var(--n-600); }
+  .task-check {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    border: 1.5px solid var(--n-300);
+    background: var(--n-0);
+    cursor: pointer;
+    margin-top: 2px;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+    transition: all 0.12s;
+  }
+  .task-check:hover { border-color: var(--u-500); }
+  .task-row.done .task-check {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .task-row.done .task-check::after {
+    content: "✓"; color: white; font-size: 13px; font-weight: 700;
+  }
+  .task-body { min-width: 0; }
+  .task-title {
+    font-weight: 600;
+    color: var(--n-800);
+    font-size: 14px;
+    line-height: 1.4;
+    cursor: pointer;
+  }
+  .task-sub {
+    font-size: 12.5px;
+    color: var(--n-600);
+    margin-top: 2px;
+  }
+  .task-inputs {
+    margin-top: 10px;
+    display: grid;
+    gap: 10px;
+  }
+  .task-inputs.cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .task-inputs.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 720px) { .task-inputs.cols-2, .task-inputs.cols-3 { grid-template-columns: 1fr; } }
+  .task-input-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+  .task-input-field.span-2 { grid-column: span 2; }
+  .task-input-field.span-3 { grid-column: 1 / -1; }
+  .task-input-field > label {
+    font-size: 10.5px;
+    color: var(--n-500);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .task-input-field input[type=text],
+  .task-input-field input[type=email],
+  .task-input-field input[type=number],
+  .task-input-field input[type=date],
+  .task-input-field input[type=tel],
+  .task-input-field select,
+  .task-input-field textarea {
+    padding: 8px 11px;
+    border: 1px solid var(--n-300);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 13.5px;
+    color: var(--n-800);
+    background: var(--n-0);
+    width: 100%;
+    min-width: 0;
+  }
+  .task-input-field input:focus,
+  .task-input-field select:focus,
+  .task-input-field textarea:focus {
+    outline: none;
+    border-color: var(--u-500);
+    box-shadow: 0 0 0 3px rgba(18,107,249,0.12);
+  }
+  .task-input-field textarea { resize: vertical; min-height: 40px; line-height: 1.45; }
+  .toggle-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    border-radius: 8px;
+    background: var(--n-0);
+    border: 1px solid var(--n-300);
+    cursor: pointer;
+    font-size: 13.5px;
+    color: var(--n-700);
+    user-select: none;
+    transition: all 0.12s;
+  }
+  .toggle-pill:hover { border-color: var(--u-400); }
+  .toggle-pill input { display: none; }
+  .toggle-pill .toggle-box {
+    width: 16px; height: 16px;
+    border-radius: 4px;
+    border: 1.5px solid var(--n-300);
+    background: var(--n-0);
+    display: grid; place-items: center;
+    flex-shrink: 0;
+    transition: all 0.12s;
+  }
+  .toggle-pill input:checked + .toggle-box {
+    background: var(--u-500);
+    border-color: var(--u-500);
+  }
+  .toggle-pill input:checked + .toggle-box::after {
+    content: "✓"; color: white; font-size: 11px; font-weight: 700;
+  }
+  .toggle-pill input:checked ~ .toggle-label {
+    color: var(--u-600);
+    font-weight: 600;
+  }
+  .field-hint {
+    font-size: 11px;
+    color: var(--n-500);
+    margin-top: 2px;
+  }
+  .field-hint.warn { color: var(--gold); }
+  .field-hint.brand { color: var(--u-600); }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 600;
+    background: var(--u-100); color: var(--u-600);
+  }
+  .badge.warn { background: #FFF7E8; color: #8B5B00; }
+  .badge.ok { background: #E9F8EC; color: #1F8E32; }
+
+  /* ---------- Step footer (nav) ---------- */
+  .step-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--n-200);
+  }
+  .step-counter {
+    font-size: 13px;
+    color: var(--n-500);
+    font-weight: 500;
+  }
+  .step-counter .of { color: var(--n-400); }
+
+  /* ---------- Progress bar at top ---------- */
+  .progress-bar {
+    height: 3px;
+    background: var(--n-200);
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--u-400), var(--u-500));
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* ---------- Step-specific visuals ---------- */
+  .ledger-diagram {
+    background: linear-gradient(180deg, var(--n-100) 0%, var(--n-0) 100%);
+    border: 1px solid var(--n-200);
+    border-radius: 14px;
+    padding: 24px;
+  }
+  .ledger-diagram svg { width: 100%; height: auto; max-height: 280px; }
+
+  .role-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .role-card {
+    background: var(--n-100);
+    border: 1px solid var(--n-200);
+    border-radius: 12px;
+    padding: 18px;
+    transition: all 0.12s;
+  }
+  .role-card:hover { border-color: var(--u-300); background: var(--u-100); }
+  .role-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: var(--u-200);
+    color: var(--u-600);
+    display: grid; place-items: center;
+    margin-bottom: 10px;
+  }
+  .role-icon svg { width: 20px; height: 20px; }
+  .role-name {
+    font-weight: 600;
+    color: var(--n-800);
+    font-size: 14.5px;
+    margin-bottom: 4px;
+  }
+  .role-desc {
+    font-size: 12.5px;
+    color: var(--n-600);
+    margin-bottom: 10px;
+  }
+  .role-input {
+    width: 100%;
+    padding: 7px 10px;
+    font-size: 13px;
+    border: 1px solid var(--n-300);
+    border-radius: 6px;
+    font-family: inherit;
+    background: var(--n-0);
+  }
+  .role-input:focus { outline: none; border-color: var(--u-500); box-shadow: 0 0 0 3px rgba(18,107,249,0.12); }
+
+  /* ---------- Final step ---------- */
+  .launch-status {
+    background: linear-gradient(135deg, var(--u-100) 0%, #ECF3FF 100%);
+    border: 1px solid var(--u-200);
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+  }
+  .launch-status.complete {
+    background: linear-gradient(135deg, #E9F8EC 0%, #DCFEE2 100%);
+    border-color: #9BE0A6;
+  }
+  .launch-status .big-emoji {
+    font-size: 56px;
+    line-height: 1;
+    margin-bottom: 14px;
+  }
+  .launch-status h2 {
+    margin: 0 0 6px;
+    font-size: 24px;
+    color: var(--n-800);
+  }
+  .launch-status p {
+    margin: 0;
+    color: var(--n-700);
+    font-size: 15px;
+  }
+
+  .copy-block {
+    background: var(--n-800);
+    color: var(--n-100);
+    border-radius: 10px;
+    padding: 18px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    position: relative;
+    margin-top: 16px;
+  }
+  .copy-block pre { margin: 0; white-space: pre-wrap; }
+  .copy-btn {
+    position: absolute;
+    top: 10px; right: 10px;
+    padding: 4px 10px;
+    font-size: 11.5px;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .copy-btn:hover { background: rgba(255,255,255,0.2); }
+
+  /* ---------- Lifecycle illustration ---------- */
+  .lifecycle {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin: 8px 0;
+  }
+  .lc-stage {
+    background: var(--n-100);
+    border: 1px solid var(--n-200);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    position: relative;
+    transition: all 0.2s;
+  }
+  .lc-stage.active {
+    background: var(--u-100);
+    border-color: var(--u-400);
+    box-shadow: 0 0 0 3px rgba(18,107,249,0.12);
+  }
+  .lc-stage.done { background: #E9F8EC; border-color: #C5EBCB; }
+  .lc-stage .lc-icon {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--n-200);
+    color: var(--n-600);
+    margin: 0 auto 8px;
+    display: grid;
+    place-items: center;
+  }
+  .lc-stage.active .lc-icon { background: var(--u-500); color: white; }
+  .lc-stage.done .lc-icon { background: var(--green); color: white; }
+  .lc-stage .lc-icon svg { width: 18px; height: 18px; }
+  .lc-stage .lc-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--n-800);
+  }
+  .lc-stage .lc-sub {
+    font-size: 11.5px;
+    color: var(--n-600);
+    margin-top: 2px;
+  }
+
+  @media (max-width: 1080px) {
+    .wizard { grid-template-columns: 1fr; }
+    .stepper { position: static; max-height: none; }
+    .property-strip-inner { grid-template-columns: 1fr 1fr; }
+    .property-strip { top: 56px; }
+    .role-grid { grid-template-columns: 1fr; }
+    .lifecycle { grid-template-columns: repeat(2, 1fr); }
+    .canvas { padding: 28px 22px; }
+    .topnav a:nth-of-type(3) { display: none; }
+  }
+
+  @media print {
+    .topbar, .property-strip, .stepper, .step-footer, .progress-bar { display: none; }
+    .wizard { grid-template-columns: 1fr; padding: 0; }
+    .canvas { box-shadow: none; border: none; padding: 0; min-height: 0; }
+    .step-content { display: block; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="logo">
+      <span class="logo-mark">U</span>
+      <span>USD Setup Wizard</span>
+    </div>
+    <nav class="topnav">
+      <a href="usd-setup.html" class="active">Wizard</a>
+      <a href="usd-checklist.html">Checklist</a>
+      <a href="https://liftlytics.atlassian.net/browse/CRM-3132" target="_blank">CRM-3132 ↗</a>
+    </nav>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+</header>
+
+<div class="property-strip">
+  <div class="property-strip-inner">
+    <div class="field">
+      <label for="propName">Property</label>
+      <input id="propName" placeholder="e.g. The Pointe at South Mountain" />
+    </div>
+    <div class="field">
+      <label for="propState">State</label>
+      <select id="propState">
+        <option value="">Select…</option>
+        <option value="AZ">Arizona (AZ)</option>
+        <option value="CA">California (CA)</option>
+        <option value="CO">Colorado (CO)</option>
+        <option value="FL">Florida (FL)</option>
+        <option value="NV">Nevada (NV)</option>
+        <option value="NY">New York (NY)</option>
+        <option value="TX">Texas (TX)</option>
+        <option value="UT">Utah (UT)</option>
+        <option value="WA">Washington (WA)</option>
+        <option value="OTHER">Other (verify with legal)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="propPMS">PMS</label>
+      <select id="propPMS">
+        <option value="ResMan">ResMan</option>
+        <option value="Yardi">Yardi (roadmap)</option>
+        <option value="RealPage">RealPage (roadmap)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="propCustomer">Customer</label>
+      <input id="propCustomer" placeholder="e.g. Mark Taylor" />
+    </div>
+    <div class="save-indicator" id="saveInd">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Saved</span>
+    </div>
+  </div>
+</div>
+
+<div class="wizard">
+
+  <aside class="stepper" id="stepper">
+    <!-- Built by JS -->
+  </aside>
+
+  <main class="canvas">
+    <div id="stepContainer"><!-- Active step renders here --></div>
+
+    <div class="step-footer">
+      <button class="btn" id="prevBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Previous
+      </button>
+      <div class="step-counter">Step <span id="curNum">1</span> <span class="of">of</span> <span id="totalNum">12</span></div>
+      <button class="btn primary" id="nextBtn">
+        Mark done & continue
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+  </main>
+</div>
+
+<script>
+  // ============================================================
+  // Step definitions — everything driven from this array
+  // ============================================================
+  const STEPS = [
+    // PHASE 1: Setup
+    {
+      id: 'welcome',
+      phase: 'Setup',
+      title: 'Welcome',
+      sub: 'A 12-step launch flow. Fill the property strip above — it powers smart defaults below.',
+      icon: 'home',
+      render: renderWelcome,
+    },
+    {
+      id: 'request',
+      phase: 'Setup',
+      title: 'Confirm the request',
+      sub: 'Validate intake, capture the launch date, and add it to the Support Events calendar.',
+      icon: 'inbox',
+      render: renderRequest,
+    },
+    {
+      id: 'addProperty',
+      phase: 'Setup',
+      title: 'Add property to Union',
+      sub: 'Create or update the property record via the New Property Wizard in CRM.',
+      icon: 'building',
+      render: renderAddProperty,
+    },
+    {
+      id: 'ledger',
+      phase: 'Setup',
+      title: 'Grant Ledger UI access',
+      sub: 'Wells Fargo accounts already exist — your job is making sure the customer can see the live Ledger.',
+      icon: 'layers',
+      render: renderLedger,
+    },
+    {
+      id: 'settings',
+      phase: 'Setup',
+      title: 'USD Property Settings',
+      sub: 'Mirrors the USD Property Settings admin form. State picks the refund window automatically.',
+      icon: 'settings',
+      render: renderSettings,
+    },
+    {
+      id: 'lease',
+      phase: 'Setup',
+      title: 'Lease & application assets',
+      sub: 'Addendum, agreement, application toggle. First per customer needs legal sign-off.',
+      icon: 'file',
+      render: renderLease,
+    },
+    {
+      id: 'claims',
+      phase: 'Setup',
+      title: 'Provision Claims Portal',
+      sub: 'Three roles: Submitter, Approver, Viewer. Capture emails for welcome send.',
+      icon: 'users',
+      render: renderClaims,
+    },
+    {
+      id: 'tracker',
+      phase: 'Setup',
+      title: 'Update the launches tracker',
+      sub: 'Mark the property row "Ready for Launch" before launch day.',
+      icon: 'tracker',
+      render: renderTracker,
+    },
+    // PHASE 2: Launch Day
+    {
+      id: 'activate',
+      phase: 'Launch Day',
+      title: 'Activate USD',
+      sub: 'Fill the Launch date in USD Settings and activate the product.',
+      icon: 'power',
+      render: renderActivate,
+    },
+    {
+      id: 'appToggle',
+      phase: 'Launch Day',
+      title: 'Enable USD at application',
+      sub: 'Applicants will see USD as an option on the application form.',
+      icon: 'toggle',
+      render: renderAppToggle,
+    },
+    {
+      id: 'verify',
+      phase: 'Launch Day',
+      title: 'Verify enrollment',
+      sub: 'Run a mock-resident enrollment end-to-end before announcing.',
+      icon: 'check-circle',
+      render: renderVerify,
+    },
+    {
+      id: 'announce',
+      phase: 'Launch Day',
+      title: 'Announce launch',
+      sub: 'Confirm billing report, post in Slack, mark tracker "Live".',
+      icon: 'megaphone',
+      render: renderAnnounce,
+    },
+  ];
+
+  // ============================================================
+  // State-aware refund rules
+  // ============================================================
+  const STATE_RULES = {
+    AZ: { refundDays: 14, refundUnit: 'business days', cite: 'A.R.S. § 33-1321(D)' },
+    CA: { refundDays: 21, refundUnit: 'calendar days', cite: 'Cal. Civ. Code § 1950.5(g)' },
+    CO: { refundDays: 30, refundUnit: 'calendar days', cite: 'C.R.S. § 38-12-103(1)', note: 'Lease may extend to 60' },
+    FL: { refundDays: 15, refundUnit: 'calendar days', cite: 'Fla. Stat. § 83.49(3)(a)', note: '30 days if claim notice sent' },
+    NV: { refundDays: 30, refundUnit: 'calendar days', cite: 'NRS 118A.242(4)' },
+    NY: { refundDays: 14, refundUnit: 'calendar days', cite: 'NY GOL § 7-108(1-a)(e)' },
+    TX: { refundDays: 30, refundUnit: 'calendar days', cite: 'Tex. Prop. Code § 92.103' },
+    UT: { refundDays: 30, refundUnit: 'calendar days', cite: 'U.C.A. § 57-17-3' },
+    WA: { refundDays: 21, refundUnit: 'calendar days', cite: 'RCW 59.18.280' },
+    OTHER: { refundDays: null, refundUnit: '', cite: 'Verify with legal' },
+  };
+
+  // ============================================================
+  // Persistence
+  // ============================================================
+  function storageKey() {
+    const name = (document.getElementById('propName').value || '').trim() || 'default';
+    const state = (document.getElementById('propState').value || '').trim();
+    return 'usd-wizard::' + name + '::' + state;
+  }
+  function getState() {
+    try { return JSON.parse(localStorage.getItem(storageKey()) || '{}'); }
+    catch(e) { return {}; }
+  }
+  function setState(s) {
+    localStorage.setItem(storageKey(), JSON.stringify(s));
+    flashSaved();
+  }
+  function mergeState(patch) {
+    const s = getState();
+    Object.assign(s, patch);
+    setState(s);
+  }
+  let saveTimer = null;
+  function flashSaved() {
+    const el = document.getElementById('saveInd');
+    el.classList.remove('saving');
+    el.querySelector('span').textContent = 'Saved';
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {}, 800);
+  }
+
+  // ============================================================
+  // Icons (small SVG library)
+  // ============================================================
+  function icon(name) {
+    const lib = {
+      home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v11h14V10"/></svg>',
+      inbox: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>',
+      building: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22V12h6v10"/><path d="M8 6h.01M16 6h.01M8 10h.01M16 10h.01"/></svg>',
+      layers: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>',
+      settings: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+      file: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>',
+      users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+      tracker: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>',
+      power: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>',
+      toggle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="5" width="22" height="14" rx="7"/><circle cx="16" cy="12" r="3" fill="currentColor"/></svg>',
+      'check-circle': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+      megaphone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 22 22 3 13"/><line x1="11" y1="11" x2="11" y2="22"/></svg>',
+      person: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+      shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+      eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+    };
+    return lib[name] || lib.home;
+  }
+
+  // ============================================================
+  // Step renderers
+  // ============================================================
+  function renderWelcome() {
+    const state = getState();
+    const propName = document.getElementById('propName').value;
+    const propState = document.getElementById('propState').value;
+    const ready = propName && propState;
+    return `
+      <div class="step-content">
+        <div class="field-card">
+          <h4>Where you are in the launch lifecycle</h4>
+          <div class="lifecycle">
+            <div class="lc-stage active">
+              <div class="lc-icon">${icon('inbox')}</div>
+              <div class="lc-label">Request</div>
+              <div class="lc-sub">Intake & validation</div>
+            </div>
+            <div class="lc-stage">
+              <div class="lc-icon">${icon('settings')}</div>
+              <div class="lc-label">Setup</div>
+              <div class="lc-sub">~6 prior-to-launch steps</div>
+            </div>
+            <div class="lc-stage">
+              <div class="lc-icon">${icon('power')}</div>
+              <div class="lc-label">Launch</div>
+              <div class="lc-sub">~5 day-of steps</div>
+            </div>
+            <div class="lc-stage">
+              <div class="lc-icon">${icon('check-circle')}</div>
+              <div class="lc-label">Live</div>
+              <div class="lc-sub">Announced + tracked</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-card">
+          <h4>What USD is, in 30 seconds</h4>
+          <p style="margin:0;color:var(--n-700);font-size:14.5px;line-height:1.6;">
+            Residents split their security deposit into ~12 monthly installments instead of paying a lump sum up front.
+            We collect via the PMS, route money through three ledger accounts, and refund or claim at move-out under state law.
+          </p>
+        </div>
+
+        ${!ready ? `
+        <div class="field-card" style="background: #FFF7E8; border-color: #F2C97C;">
+          <h4 style="color: #8B5B00;">⚠ Fill the property strip above before continuing</h4>
+          <p style="margin:0;color:#8B5B00;font-size:14px;">
+            Property name and state drive the smart defaults in later steps (refund window, fee, charge push).
+          </p>
+        </div>` : `
+        <div class="field-card" style="background: #E9F8EC; border-color: #C5EBCB;">
+          <h4 style="color: #1F8E32;">✓ Ready to begin</h4>
+          <p style="margin:0;color:#1F8E32;font-size:14px;">
+            Launching <strong>${propName}</strong> in <strong>${propState}</strong>. Click "Mark done & continue" to start.
+          </p>
+        </div>`}
+      </div>
+    `;
+  }
+
+  function renderRequest() {
+    return `
+      <div class="step-content">
+        <div class="field-card">
+          <h4>Who can submit a request</h4>
+          <div class="role-grid">
+            <div class="role-card">
+              <div class="role-icon">${icon('person')}</div>
+              <div class="role-name">Mark Taylor</div>
+              <div class="role-desc">MCO/AMD, Lino, Adilene, Maya. Fallback: <a href="mailto:luke.arnold@mark-taylor.com">Luke Arnold</a></div>
+            </div>
+            <div class="role-card">
+              <div class="role-icon">${icon('person')}</div>
+              <div class="role-name">Avanti</div>
+              <div class="role-desc">David Rodriguez (<a href="mailto:drodriguez@avantiresidential.com">drodriguez@avantiresidential.com</a>)</div>
+            </div>
+            <div class="role-card">
+              <div class="role-icon">${icon('person')}</div>
+              <div class="role-name">Other customers</div>
+              <div class="role-desc">Confirm requester is authorized before scheduling</div>
+            </div>
+          </div>
+        </div>
+
+        <ul class="task-list">
+          ${taskRow('req-1',
+            'Capture the requested launch date',
+            'Then add to the Support Events Google Calendar',
+            [
+              { key: '__launchDate',    label: 'Launch date',     type: 'date', span: 2 },
+              { key: 'calendarAdded',   label: 'Added to Support Events calendar', type: 'toggle' },
+            ]
+          )}
+          ${taskRow('req-2',
+            'Confirm PMS at launch',
+            'ResMan today; Yardi/RealPage on roadmap',
+            [
+              { key: 'pmsConfirmed', label: 'PMS confirmed with submitter', type: 'toggle' },
+            ]
+          )}
+          ${taskRow('req-3',
+            'Flag any signed leases needing manual handling',
+            'Future-dated leases without a USD selection that may need opt-in',
+            [
+              { key: 'futureLeases', label: 'Leases needing manual handling', type: 'textarea', placeholder: 'Unit # and resident name, one per line\n(leave blank if none)' },
+            ]
+          )}
+        </ul>
+
+        <button class="why-toggle" onclick="toggleWhy(this)">Why this matters ▾</button>
+        <div class="why-content">
+          A bad intake creates a bad launch. Future-dated leases without a USD selection have to be handled manually before launch day — catching them now avoids resident confusion later.
+        </div>
+      </div>
+    `;
+  }
+
+  function renderAddProperty() {
+    const customer = (document.getElementById('propCustomer').value || '').toLowerCase();
+    const isAvanti = customer.includes('avanti');
+
+    return `
+      <div class="step-content">
+        <div class="action-row">
+          <a class="btn primary" href="https://my.gounion.com/admin/" target="_blank">
+            ${icon('building').replace('width="32"', 'width="14"').replace('height="32"', 'height="14"')}
+            Open New Property Wizard
+          </a>
+          <span class="badge">Skip if property already exists in Union</span>
+        </div>
+
+        <ul class="task-list">
+          ${taskRow('ap-1',
+            'Request PMS ID from submitter',
+            isAvanti
+              ? 'Avanti property — also CC Courtney Orr (corr@avantiresidential.com)'
+              : 'Submitter usually has it on hand; otherwise route via Luke Arnold (MT)',
+            [
+              { key: 'requestedFrom', label: 'Requested from', type: 'text', placeholder: 'Name / email of submitter' },
+              { key: 'requestedDate',  label: 'Date requested', type: 'date' },
+            ]
+          )}
+
+          ${taskRow('ap-2',
+            'Add PMS ID & mark "is released" in Admin',
+            'In Admin → property record',
+            [
+              { key: 'pmsId',      label: 'PMS ID',     type: 'text',   placeholder: 'e.g. RM-128474', span: 2 },
+              { key: 'isReleased', label: '"is released" checked in Admin', type: 'toggle' },
+            ]
+          )}
+
+          ${taskRow('ap-3',
+            'Set property address',
+            'Must match the PMS property record exactly',
+            [
+              { key: 'propAddress1', label: 'Street address', type: 'text', placeholder: '1234 N Example Rd', span: 2 },
+              { key: 'propCity',     label: 'City',           type: 'text', placeholder: 'Phoenix' },
+              { key: 'propZip',      label: 'ZIP',            type: 'text', placeholder: '85016' },
+            ]
+          )}
+
+          ${taskRow('ap-4',
+            'Set correct timezone',
+            'Drives every USD posting and notification — get this right',
+            [
+              { key: 'propTimezone', label: 'Timezone', type: 'select', span: 3, options: [
+                { value: 'America/Phoenix',     label: 'Mountain (Arizona, no DST) — America/Phoenix' },
+                { value: 'America/Denver',      label: 'Mountain (DST) — America/Denver' },
+                { value: 'America/Los_Angeles', label: 'Pacific — America/Los_Angeles' },
+                { value: 'America/Chicago',     label: 'Central — America/Chicago' },
+                { value: 'America/New_York',    label: 'Eastern — America/New_York' },
+              ]},
+            ]
+          )}
+
+          ${taskRow('ap-5',
+            'Sync property email',
+            'Required for resident enrollment communications and refund notifications',
+            [
+              { key: 'propEmail', label: 'Property email', type: 'email', placeholder: 'leasing@theproperty.com', span: 2 },
+              { key: 'propEmailSynced', label: 'Sync verified in Admin', type: 'toggle' },
+            ]
+          )}
+        </ul>
+
+        <button class="why-toggle" onclick="toggleWhy(this)">Why this matters ▾</button>
+        <div class="why-content">
+          USD doesn't work without an authenticated read of the PMS data. The address must match the PMS or property documents won't generate correctly. The timezone drives every USD charge push and notification — wrong timezone means residents see misaligned dates on their portal.
+        </div>
+      </div>
+    `;
+  }
+
+  function renderLedger() {
+    return `
+      <div class="step-content">
+        <div class="ledger-diagram">
+          <svg viewBox="0 0 600 240" xmlns="http://www.w3.org/2000/svg">
+            <!-- Resident -->
+            <rect x="20" y="100" width="100" height="44" rx="8" fill="#F4F8FF" stroke="#88B3FB" stroke-width="1.5"/>
+            <text x="70" y="118" font-family="Inter" font-size="12" font-weight="600" fill="#0D182C" text-anchor="middle">Resident</text>
+            <text x="70" y="134" font-family="Inter" font-size="10" fill="#5C687B" text-anchor="middle">monthly payment</text>
+
+            <!-- Arrow 1 -->
+            <line x1="125" y1="122" x2="195" y2="122" stroke="#126BF9" stroke-width="2"/>
+            <polygon points="195,122 188,118 188,126" fill="#126BF9"/>
+
+            <!-- Temporary -->
+            <rect x="200" y="92" width="120" height="60" rx="8" fill="#126BF9"/>
+            <text x="260" y="116" font-family="Inter" font-size="13" font-weight="700" fill="white" text-anchor="middle">Temporary</text>
+            <text x="260" y="135" font-family="Inter" font-size="10.5" fill="rgba(255,255,255,0.85)" text-anchor="middle">Wells Fargo · in transit</text>
+
+            <!-- Split arrows -->
+            <line x1="325" y1="115" x2="395" y2="55" stroke="#126BF9" stroke-width="2"/>
+            <polygon points="395,55 387,57 391,63" fill="#126BF9"/>
+            <line x1="325" y1="135" x2="395" y2="195" stroke="#126BF9" stroke-width="2"/>
+            <polygon points="395,195 391,187 387,193" fill="#126BF9"/>
+
+            <!-- Holding -->
+            <rect x="400" y="30" width="170" height="60" rx="8" fill="#E9F8EC" stroke="#4FD35E" stroke-width="1.5"/>
+            <text x="485" y="54" font-family="Inter" font-size="13" font-weight="700" fill="#0D182C" text-anchor="middle">Holding</text>
+            <text x="485" y="73" font-family="Inter" font-size="10.5" fill="#5C687B" text-anchor="middle">Wells Fargo · refundable principal</text>
+
+            <!-- Checking -->
+            <rect x="400" y="160" width="170" height="60" rx="8" fill="#FFF7E8" stroke="#E99903" stroke-width="1.5"/>
+            <text x="485" y="184" font-family="Inter" font-size="13" font-weight="700" fill="#0D182C" text-anchor="middle">Checking</text>
+            <text x="485" y="203" font-family="Inter" font-size="10.5" fill="#5C687B" text-anchor="middle">Wells Fargo · Union fee revenue</text>
+          </svg>
+        </div>
+
+        <div class="field-card" style="background: var(--u-100); border-color: var(--u-200);">
+          <h4 style="color: var(--u-600);">ℹ The accounts already exist</h4>
+          <p style="margin:0;color:var(--n-700);font-size:13.5px;line-height:1.55;">
+            Temporary, Holding, and Checking are real Wells Fargo bank accounts owned by Union — they're shared across all USD properties.
+            Nothing to provision here. <strong>Your job is making sure the customer can see the live Ledger UI</strong> that mirrors those accounts so they know where their residents' money sits at any moment.
+          </p>
+        </div>
+
+        <ul class="task-list">
+          ${taskRow('lg-1',
+            'Add customer team to Ledger UI access',
+            'Grant read access to the property\'s ledger view',
+            [
+              { key: 'ledgerAccessEmails', label: 'Customer emails granted access', type: 'textarea', placeholder: 'one per line — e.g.\nluke.arnold@mark-taylor.com\ncorr@avantiresidential.com' },
+            ]
+          )}
+
+          ${taskRow('lg-2',
+            'Confirm customer can view the live Ledger',
+            'Have them open the Ledger UI and confirm the property shows up',
+            [
+              { key: 'ledgerVerifiedBy', label: 'Verified by (customer contact)', type: 'text', placeholder: 'Name of person who confirmed' },
+              { key: 'ledgerVerifiedDate', label: 'Date verified', type: 'date' },
+            ]
+          )}
+
+          ${taskRow('lg-3',
+            'Walk customer through the three Ledger views',
+            'Quick tour so they know what each balance represents and where to look on move-out',
+            [
+              { key: 'ledgerTrainingDone', label: 'Training call complete', type: 'toggle' },
+              { key: 'ledgerTrainingDate', label: 'Training date', type: 'date' },
+            ]
+          )}
+        </ul>
+
+        <div class="action-row">
+          <a class="btn primary" href="https://my.gounion.com/admin/" target="_blank">Open Ledger UI admin</a>
+          <a class="btn ghost" href="https://liftlytics.atlassian.net/wiki/spaces/LLC/pages/2561441797/USD+Ledger+Rulebook" target="_blank">Ledger Rulebook ↗</a>
+        </div>
+
+        <button class="why-toggle" onclick="toggleWhy(this)">Why three accounts at all? ▾</button>
+        <div class="why-content">
+          Union holds USD funds in three separate Wells Fargo accounts because each answers a different question:
+          <strong>Temporary</strong> — "is this money still in transit?" (just-collected, pre-sweep).
+          <strong>Holding</strong> — "do we owe this back to the resident?" (the refundable principal).
+          <strong>Checking</strong> — "did we earn this?" (Union's fee revenue).
+          Splitting funds this way keeps resident money clean from Union revenue, which is critical for SOC/audit and for honest move-out refunds.
+        </div>
+      </div>
+    `;
+  }
+
+  function renderSettings() {
+    const propState = document.getElementById('propState').value;
+    const customer = document.getElementById('propCustomer').value;
+    const rule = STATE_RULES[propState];
+    const isMT = customer && customer.toLowerCase().includes('mark') && customer.toLowerCase().includes('taylor');
+
+    const refundValue = rule && rule.refundDays ? rule.refundDays : '';
+    const refundUnit = rule && rule.refundUnit ? rule.refundUnit : '';
+    const refundCite = rule ? rule.cite : '';
+    const refundNote = rule && rule.note ? rule.note : '';
+
+    return `
+      <div class="step-content">
+        ${propState ? '' : `
+        <div class="field-card" style="background:#FFF7E8;border-color:#F2C97C;">
+          <h4 style="color:#8B5B00;">⚠ Select a state in the property strip</h4>
+          <p style="margin:0;color:#8B5B00;font-size:14px;">Refund window auto-fills based on state law. Without it, you'll have to research the rule manually.</p>
+        </div>
+        `}
+
+        <div class="field-card">
+          <h4>Smart-defaulted settings</h4>
+
+          <div class="smart-field">
+            <div class="lbl">Installment term</div>
+            <div class="val">
+              <input data-cfg="installmentMonths" type="number" min="1" max="24" value="12" />
+              <span class="hint auto">= lease length in months</span>
+            </div>
+          </div>
+
+          <div class="smart-field">
+            <div class="lbl">Resident monthly fee</div>
+            <div class="val">
+              <input data-cfg="monthlyFee" type="number" step="0.01" value="${isMT ? '5.00' : ''}" placeholder="5.00" />
+              <span class="hint ${isMT ? 'auto' : ''}">USD · ${isMT ? 'MT default' : 'confirm per customer'}</span>
+            </div>
+          </div>
+
+          <div class="smart-field">
+            <div class="lbl">Charge push day</div>
+            <div class="val">
+              <input data-cfg="pushDay" type="text" value="1st @ 10:30 UTC" readonly style="background:var(--n-100);"/>
+              <span class="hint auto">aligned w/ Credit Builder</span>
+            </div>
+          </div>
+
+          <div class="smart-field">
+            <div class="lbl">Late day</div>
+            <div class="val">
+              <input data-cfg="lateDay" type="number" min="1" max="28" value="${isMT ? '5' : ''}" placeholder="5" />
+              <span class="hint ${isMT ? 'auto' : ''}">${isMT ? 'MT default' : 'varies per customer'}</span>
+            </div>
+          </div>
+
+          <div class="smart-field" style="border-top: 2px solid var(--u-300); padding-top: 14px; margin-top: 6px;">
+            <div class="lbl" style="color: var(--u-600); font-weight: 600;">Refund window</div>
+            <div class="val">
+              <input data-cfg="refundDays" type="number" value="${refundValue}" placeholder="—" />
+              <span class="hint ${rule && rule.refundDays ? 'auto' : ''}">${refundUnit || 'set state first'}</span>
+              ${refundCite ? `<span class="cite">${refundCite}</span>` : ''}
+            </div>
+          </div>
+          ${refundNote ? `<div style="font-size:12.5px;color:var(--gold);margin-left:214px;margin-top:2px;">ℹ ${refundNote}</div>` : ''}
+
+          <div class="smart-field">
+            <div class="lbl">Launch date</div>
+            <div class="val">
+              <input value="(leave blank — fills on launch day)" readonly style="background:#FFF7E8;color:#8B5B00;border-color:#F2C97C;"/>
+              <span class="hint warn" style="background:#FFF7E8;color:#8B5B00;">⚠ activates USD when filled</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-row">
+          <a class="btn primary" href="https://my.gounion.com/admin/resident/usdpropertysetting/add/" target="_blank">
+            Open USD Property Settings
+          </a>
+          <a class="btn ghost" href="https://liftlytics.atlassian.net/wiki/spaces/LLC/pages/2523070466/Security+Deposit+Fund+Flow+and+Ledger+Mapping" target="_blank">
+            Fund Flow doc ↗
+          </a>
+        </div>
+
+        <button class="why-toggle" onclick="toggleWhy(this)">State refund-window reference ▾</button>
+        <div class="why-content">
+          <div style="display:grid;grid-template-columns: 60px 100px 1fr;gap:8px 14px;font-size:13px;">
+            <div style="font-weight:700;color:var(--n-600);">State</div>
+            <div style="font-weight:700;color:var(--n-600);">Window</div>
+            <div style="font-weight:700;color:var(--n-600);">Statute</div>
+            <div><strong>AZ</strong></div><div>14 business days</div><div>A.R.S. § 33-1321(D)</div>
+            <div><strong>CA</strong></div><div>21 calendar days</div><div>Cal. Civ. Code § 1950.5(g)</div>
+            <div><strong>CO</strong></div><div>30 (lease may say 60)</div><div>C.R.S. § 38-12-103(1)</div>
+            <div><strong>FL</strong></div><div>15 (30 w/ claim notice)</div><div>Fla. Stat. § 83.49(3)</div>
+            <div><strong>NV</strong></div><div>30 calendar days</div><div>NRS 118A.242(4)</div>
+            <div><strong>NY</strong></div><div>14 calendar days</div><div>NY GOL § 7-108</div>
+            <div><strong>TX</strong></div><div>30 calendar days</div><div>Tex. Prop. Code § 92.103</div>
+            <div><strong>UT</strong></div><div>30 calendar days</div><div>U.C.A. § 57-17-3</div>
+            <div><strong>WA</strong></div><div>21 calendar days</div><div>RCW 59.18.280</div>
+          </div>
+          <div style="margin-top:10px;font-size:12px;color:var(--n-600);">Always confirm with the current statute and the lease before finalizing. Some states differ for furnished units, military leases, or written-claim cases.</div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderLease() {
+    return `
+      <div class="step-content">
+        <ul class="task-list">
+          ${taskRow('ls-1',
+            'USD lease addendum added to PMS template',
+            'Required at every USD property',
+            [
+              { key: 'addendumVersion', label: 'Addendum version / date',  type: 'text', placeholder: 'e.g. MT-USD-v3 (2026-04)', span: 2 },
+              { key: 'addendumInPMS',   label: 'Confirmed in PMS template', type: 'toggle' },
+            ]
+          )}
+          ${taskRow('ls-2',
+            'Security Deposit Agreement auto-includes on USD selection',
+            'Generated dynamically at application time',
+            [
+              { key: 'agreementAutoInclude', label: 'Verified auto-include works', type: 'toggle' },
+            ]
+          )}
+          ${taskRow('ls-3',
+            'USD appears in application portal',
+            'Test the application form against a real unit',
+            [
+              { key: 'testUnit',          label: 'Test unit #',                type: 'text', placeholder: 'e.g. 2104' },
+              { key: 'appPortalVerified', label: 'USD option appears',         type: 'toggle' },
+            ]
+          )}
+          ${taskRow('ls-4',
+            'Legal sign-off (first launch per customer only)',
+            'Justin reviews the addendum + agreement on the first launch with a new customer; subsequent properties reuse the same templates',
+            [
+              { key: 'legalNeeded',  label: 'Legal review needed (new customer or template change)', type: 'toggle' },
+              { key: 'legalSignoff', label: 'Sign-off date', type: 'date' },
+            ]
+          )}
+        </ul>
+
+        <div class="action-row">
+          <a class="btn primary" href="https://liftlytics.atlassian.net/wiki/spaces/LLC/pages/2268921857/Security+Deposit+Applications" target="_blank">
+            USD Applications doc ↗
+          </a>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderClaims() {
+    return `
+      <div class="step-content">
+        <div class="role-grid">
+          <div class="role-card">
+            <div class="role-icon">${icon('person')}</div>
+            <div class="role-name">Submitter</div>
+            <div class="role-desc">MCO/AMD or property manager. Opens and edits claims.</div>
+            <input class="role-input" data-cfg="claimSubmitterEmail" placeholder="email@property.com" />
+          </div>
+          <div class="role-card">
+            <div class="role-icon">${icon('shield')}</div>
+            <div class="role-name">Approver</div>
+            <div class="role-desc">Regional or Union processor. Finalizes refunds.</div>
+            <input class="role-input" data-cfg="claimApproverEmail" placeholder="email@union.com" />
+          </div>
+          <div class="role-card">
+            <div class="role-icon">${icon('eye')}</div>
+            <div class="role-name">Viewer</div>
+            <div class="role-desc">Auditors, reporting. Read-only.</div>
+            <input class="role-input" data-cfg="claimViewerEmail" placeholder="email@…" />
+          </div>
+        </div>
+
+        <ul class="task-list">
+          ${taskRow('cl-1', 'Submitter account(s) created', '',
+            [{ key: 'claimSubmitterCreated', label: 'Account live in Claims Portal', type: 'toggle' }])}
+          ${taskRow('cl-2', 'Approver account(s) created', '',
+            [{ key: 'claimApproverCreated', label: 'Account live in Claims Portal', type: 'toggle' }])}
+          ${taskRow('cl-3', 'Viewer account(s) created (optional)', '',
+            [{ key: 'claimViewerCreated', label: 'Account live (or skip)', type: 'toggle' }])}
+          ${taskRow('cl-4', 'Welcome email + SOP link sent', '',
+            [{ key: 'claimWelcomeSent', label: 'Welcome email sent to all new users', type: 'toggle' }])}
+        </ul>
+
+        <div class="action-row">
+          <a class="btn primary" href="https://my.gounion.com/admin/claims/" target="_blank">Open Claims Portal admin</a>
+          <a class="btn ghost" href="https://liftlytics.atlassian.net/wiki/spaces/LLC/pages/2269085697/Security+Deposit+Claims+Portal" target="_blank">Claims SOP ↗</a>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderTracker() {
+    return `
+      <div class="step-content">
+        <ul class="task-list">
+          ${taskRow('tr-1', 'Property row added to launches tracker', 'All required columns filled',
+            [{ key: 'trackerRowAdded', label: 'Row added to USD Launches sheet', type: 'toggle' }])}
+          ${taskRow('tr-2',
+            'Confirm billing email',
+            'Check with Luke for MT properties if unsure',
+            [
+              { key: 'billingEmail', label: 'Billing email', type: 'email', placeholder: 'billing@property.com', span: 2 },
+              { key: 'billingEmailConfirmed', label: 'Confirmed with customer', type: 'toggle' },
+            ]
+          )}
+          ${taskRow('tr-3',
+            'Set tracker row status',
+            'Anything still "Pending" = a blocker',
+            [
+              { key: 'trackerStatus', label: 'Row status', type: 'select', options: [
+                { value: 'Pending',          label: 'Pending' },
+                { value: 'Ready for Launch', label: 'Ready for Launch' },
+                { value: 'Live',             label: 'Live' },
+              ]},
+            ]
+          )}
+        </ul>
+
+        <div class="action-row">
+          <a class="btn primary" href="https://docs.google.com/spreadsheets/d/17NiveBEaaV4fezS7hMbz82Gji2rK8YqZOEYK2MigbHY/edit?usp=sharing" target="_blank">
+            Open USD Launches sheet
+          </a>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderActivate() {
+    return `
+      <div class="step-content">
+        <div class="field-card" style="background:#FFF7E8;border-color:#F2C97C;">
+          <h4 style="color:#8B5B00;">⚠ This step flips USD live</h4>
+          <p style="margin:0;color:#8B5B00;font-size:14px;">Confirm with the property team they're ready before running. Don't activate before business hours.</p>
+        </div>
+
+        <ul class="task-list">
+          ${taskRow('act-1',
+            'Fill Launch date in USD Property Settings',
+            'This activates USD for the property',
+            [
+              { key: '__launchDate', label: 'Launch date',          type: 'date', span: 2 },
+              { key: 'launchTime',   label: 'Activated at (local)', type: 'text', placeholder: 'e.g. 9:00 AM MST' },
+            ]
+          )}
+          ${taskRow('act-2',
+            'Activate the Union Security Deposit product',
+            'In the product admin',
+            [
+              { key: 'productActivated', label: 'Product activated', type: 'toggle' },
+              { key: 'activatedBy',      label: 'Activated by',      type: 'text', placeholder: 'Your name' },
+            ]
+          )}
+        </ul>
+
+        <div class="action-row">
+          <a class="btn primary" href="https://my.gounion.com/admin/resident/usdpropertysetting/" target="_blank">Open USD Settings</a>
+          <a class="btn" href="https://my.gounion.com/admin/api/product/" target="_blank">Open Products admin</a>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderAppToggle() {
+    return `
+      <div class="step-content">
+        <ul class="task-list">
+          ${taskRow('at-1',
+            'Toggle "USD available at application"',
+            'In property application settings',
+            [{ key: 'appToggleOn', label: 'Toggle is ON', type: 'toggle' }]
+          )}
+          ${taskRow('at-2',
+            'Verify USD appears on a real application',
+            'Load the application form for a test unit',
+            [
+              { key: 'verifyTestUnit', label: 'Test unit #',           type: 'text', placeholder: 'e.g. 1203' },
+              { key: 'appVerifiedOK',  label: 'USD card appears on app', type: 'toggle' },
+            ]
+          )}
+        </ul>
+
+        <button class="why-toggle" onclick="toggleWhy(this)">What residents see ▾</button>
+        <div class="why-content">
+          On the application's security-deposit step, residents now see two cards: <strong>Traditional refundable deposit</strong> (lump sum) vs. <strong>Union Security Deposit</strong> (~12 installments). Picking USD adds the addendum to their lease automatically and starts the monthly schedule on lease start.
+        </div>
+      </div>
+    `;
+  }
+
+  function renderVerify() {
+    return `
+      <div class="step-content">
+        <div class="action-row">
+          <a class="btn primary" href="https://my.gounion.com/admin/action/run-pms-sync/" target="_blank">Run PMS sync</a>
+          <a class="btn" href="https://liftlytics.atlassian.net/wiki/spaces/LLC/pages/2741501954/USD+Standalone" target="_blank">Create mock resident ↗</a>
+          <span class="badge">Skip PMS sync if property already on Union Leasing or CB</span>
+        </div>
+
+        <div class="field-card">
+          <h4>Mock-resident test</h4>
+          <ul class="task-list">
+            ${taskRow('vf-mock',
+              'Create the mock resident',
+              'Via Django Admin → Management Command Tools → create_resident_mocks',
+              [
+                { key: 'mockResidentName', label: 'Mock resident name', type: 'text', placeholder: 'e.g. Test Lessee' },
+                { key: 'mockUnitNumber',   label: 'Unit assigned',      type: 'text', placeholder: 'e.g. 1101' },
+              ]
+            )}
+            ${taskRow('vf-1', 'USD installment posts in PMS', '',
+              [{ key: 'vf1ok', label: 'Confirmed in PMS transaction log', type: 'toggle' }])}
+            ${taskRow('vf-2', 'Temporary Account receives first payment', '',
+              [{ key: 'vf2ok', label: 'Visible in Ledger UI', type: 'toggle' }])}
+            ${taskRow('vf-3', 'Resident portal shows USD schedule', '',
+              [{ key: 'vf3ok', label: 'Loaded resident portal as test resident', type: 'toggle' }])}
+            ${taskRow('vf-4', 'Property team sees resident in dashboard', '',
+              [{ key: 'vf4ok', label: 'Verified with property contact', type: 'toggle' }])}
+            ${taskRow('vf-issues',
+              'Issues found during test',
+              'Blank = clean test',
+              [{ key: 'vfIssues', label: 'Issues / observations', type: 'textarea', placeholder: 'leave blank if no issues' }]
+            )}
+          </ul>
+        </div>
+
+        <div class="field-card" style="background:#FCE9E9;border-color:#F2A8A6;">
+          <h4 style="color:#9F1F1D;">If anything fails the test</h4>
+          <p style="margin:0;color:#9F1F1D;font-size:14px;">DM Dusan (engineering) or Goran (reporting). <strong>Don't announce</strong> launch externally until the test flow runs clean.</p>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderAnnounce() {
+    const propName = document.getElementById('propName').value || '[Property]';
+    const propState = document.getElementById('propState').value || '[State]';
+    const customer = document.getElementById('propCustomer').value || '[Customer]';
+    const allDone = isAllDone();
+
+    return `
+      <div class="step-content">
+        <div class="launch-status ${allDone ? 'complete' : ''}">
+          <div class="big-emoji">${allDone ? '🎉' : '🚀'}</div>
+          <h2>${allDone ? 'USD is live' : 'Ready to announce'}</h2>
+          <p>${allDone ? 'All steps complete. Drop the announcement below.' : 'Finish remaining steps, then announce.'}</p>
+        </div>
+
+        <ul class="task-list">
+          ${taskRow('an-1', 'Property added to Monthly USD Enrollment Report distribution', '',
+            [{ key: 'monthlyReportAdded', label: 'Added to distribution', type: 'toggle' }])}
+          ${taskRow('an-2',
+            'Confirm billing email recipient list',
+            '',
+            [{ key: 'billingRecipients', label: 'All billing recipients', type: 'textarea', placeholder: 'one per line — final list of who receives the monthly report' }]
+          )}
+          ${taskRow('an-3',
+            'Post launch confirmation in #usd-launches',
+            'Copy the template above',
+            [
+              { key: 'slackPosted',    label: 'Posted in Slack', type: 'toggle' },
+              { key: 'slackPermalink', label: 'Slack permalink', type: 'text', placeholder: 'optional — paste link for the record' },
+            ]
+          )}
+          ${taskRow('an-4',
+            'Update Launches tracker row to "Live"',
+            '',
+            [{ key: 'trackerLive', label: 'Row set to Live', type: 'toggle' }]
+          )}
+        </ul>
+
+        <div class="field-card">
+          <h4>Slack announcement template</h4>
+          <div class="copy-block">
+            <button class="copy-btn" onclick="copyAnnouncement()">Copy</button>
+            <pre id="announceText">🚀 USD is live at <strong>${propName}</strong> (${propState}, ${customer})
+Launch date: ${getState().__launchDate || 'today'}
+Resident fee: $${getState().monthlyFee || '—'}/mo · Refund window: ${getState().refundDays || '—'} ${STATE_RULES[propState]?.refundUnit || ''}
+PMS: ${document.getElementById('propPMS').value}
+
+Tracker row updated to Live. Reach out if you spot anything off.</pre>
+          </div>
+        </div>
+
+        <div class="action-row">
+          <a class="btn primary" href="usd-checklist.html">Open checklist view →</a>
+          <a class="btn" onclick="window.print()">Print full record</a>
+        </div>
+      </div>
+    `;
+  }
+
+  // ============================================================
+  // Helpers
+  // ============================================================
+  function microCheck(id, title, sub) {
+    const checked = !!getState()[id];
+    return `
+      <li class="${checked ? 'done' : ''}" data-mc="${id}" onclick="toggleMicro('${id}')">
+        <div class="micro-check"></div>
+        <div class="micro-content">
+          <div class="micro-title">${title}</div>
+          ${sub ? `<div class="micro-sub">${sub}</div>` : ''}
+        </div>
+      </li>
+    `;
+  }
+
+  // taskRow: a check item that captures structured data.
+  // inputs = [{ key, label, type, placeholder, hint, options, cols }]
+  //   type: 'text' | 'email' | 'date' | 'number' | 'tel' | 'select' | 'textarea' | 'toggle'
+  //   options: [{value,label}] (for select)
+  //   cols: 1|2|3 (default 1)
+  //   span: 1|2|3 (how wide the field is in the grid)
+  function taskRow(id, title, sub, inputs) {
+    const state = getState();
+    const checked = !!state[id];
+    const cols = inputs && inputs.length > 1 ? (inputs.length >= 3 ? 'cols-3' : 'cols-2') : '';
+    let inputsHTML = '';
+    if (inputs && inputs.length) {
+      inputsHTML = `<div class="task-inputs ${cols}">`;
+      inputs.forEach(inp => {
+        const val = state[inp.key];
+        const safe = (val === undefined || val === null) ? '' : String(val).replace(/"/g, '&quot;');
+        const spanCls = inp.span === 2 ? 'span-2' : (inp.span === 3 ? 'span-3' : '');
+        if (inp.type === 'toggle') {
+          inputsHTML += `
+            <div class="task-input-field ${spanCls}">
+              <label style="visibility:hidden;height:0;margin:0;">${inp.label}</label>
+              <label class="toggle-pill">
+                <input type="checkbox" data-cfg="${inp.key}" ${state[inp.key] ? 'checked' : ''}>
+                <span class="toggle-box"></span>
+                <span class="toggle-label">${inp.label}</span>
+              </label>
+            </div>`;
+        } else if (inp.type === 'select') {
+          const opts = (inp.options || []).map(o =>
+            `<option value="${o.value}" ${safe===o.value?'selected':''}>${o.label}</option>`
+          ).join('');
+          inputsHTML += `
+            <div class="task-input-field ${spanCls}">
+              <label>${inp.label}</label>
+              <select data-cfg="${inp.key}">
+                <option value="">${inp.placeholder || 'Select…'}</option>
+                ${opts}
+              </select>
+              ${inp.hint ? `<div class="field-hint ${inp.hintClass||''}">${inp.hint}</div>` : ''}
+            </div>`;
+        } else if (inp.type === 'textarea') {
+          inputsHTML += `
+            <div class="task-input-field span-3">
+              <label>${inp.label}</label>
+              <textarea data-cfg="${inp.key}" placeholder="${inp.placeholder||''}">${safe}</textarea>
+              ${inp.hint ? `<div class="field-hint ${inp.hintClass||''}">${inp.hint}</div>` : ''}
+            </div>`;
+        } else {
+          inputsHTML += `
+            <div class="task-input-field ${spanCls}">
+              <label>${inp.label}</label>
+              <input type="${inp.type||'text'}" data-cfg="${inp.key}" value="${safe}" placeholder="${inp.placeholder||''}" />
+              ${inp.hint ? `<div class="field-hint ${inp.hintClass||''}">${inp.hint}</div>` : ''}
+            </div>`;
+        }
+      });
+      inputsHTML += `</div>`;
+    }
+    return `
+      <li class="task-row ${checked ? 'done' : ''}" data-mc="${id}">
+        <div class="task-check" onclick="toggleMicro('${id}')" title="Mark done"></div>
+        <div class="task-body">
+          <div class="task-title" onclick="toggleMicro('${id}')">${title}</div>
+          ${sub ? `<div class="task-sub">${sub}</div>` : ''}
+          ${inputsHTML}
+        </div>
+      </li>
+    `;
+  }
+  function toggleMicro(id) {
+    const s = getState();
+    if (s[id]) delete s[id]; else s[id] = true;
+    setState(s);
+    renderStep(currentStep);
+    renderStepper();
+    updateProgress();
+  }
+  function toggleWhy(btn) {
+    const c = btn.nextElementSibling;
+    c.classList.toggle('open');
+    btn.textContent = c.classList.contains('open')
+      ? btn.textContent.replace('▾', '▴')
+      : btn.textContent.replace('▴', '▾');
+  }
+  function isAllDone() {
+    return STEPS.every((s,i) => isStepDone(i));
+  }
+
+  // ============================================================
+  // Step completion logic
+  // ============================================================
+  // A step is "done" when its `data-step-checks` items are all checked,
+  // OR when it has been explicitly marked done by the user (markStepDone).
+  const STEP_CHECK_KEYS = {
+    1: ['req-1','req-2','req-3'],
+    2: ['ap-1','ap-2','ap-3','ap-4','ap-5'],
+    3: ['lg-1','lg-2','lg-3'],
+    4: [], // no micro-checks; mark via continue
+    5: ['ls-1','ls-2','ls-3','ls-4'],
+    6: ['cl-1','cl-2','cl-3','cl-4'],
+    7: ['tr-1','tr-2','tr-3'],
+    8: ['act-1','act-2'],
+    9: ['at-1','at-2'],
+    10: ['vf-1','vf-2','vf-3','vf-4'],
+    11: ['an-1','an-2','an-3','an-4'],
+  };
+
+  function isStepDone(stepIndex) {
+    if (stepIndex === 0) return !!getState()['__welcomed'];
+    const keys = STEP_CHECK_KEYS[stepIndex];
+    if (!keys || keys.length === 0) {
+      return !!getState()['__step' + stepIndex];
+    }
+    const s = getState();
+    return keys.every(k => s[k]);
+  }
+
+  function markStepCompleteByContinue(stepIndex) {
+    const s = getState();
+    if (stepIndex === 0) s['__welcomed'] = true;
+    else if (!STEP_CHECK_KEYS[stepIndex] || STEP_CHECK_KEYS[stepIndex].length === 0) {
+      s['__step' + stepIndex] = true;
+    }
+    // For steps with checks, "Continue" advances even if not all checked — user discretion.
+    setState(s);
+  }
+
+  // ============================================================
+  // Render: stepper + active step
+  // ============================================================
+  let currentStep = 0;
+
+  function renderStepper() {
+    const el = document.getElementById('stepper');
+    let html = '';
+    let lastPhase = null;
+    STEPS.forEach((s, i) => {
+      if (s.phase !== lastPhase) {
+        html += `<div class="stepper-group"><div class="stepper-label">${s.phase}</div>`;
+        lastPhase = s.phase;
+      }
+      const done = isStepDone(i);
+      const current = i === currentStep;
+      html += `
+        <div class="step-link ${current ? 'current' : ''} ${done ? 'done' : ''}" onclick="goToStep(${i})">
+          <div class="step-dot"><span class="num">${i + 1}</span></div>
+          <div>${s.title}</div>
+        </div>
+      `;
+    });
+    html += '</div>';
+    el.innerHTML = html;
+  }
+
+  function renderStep(i) {
+    const s = STEPS[i];
+    const container = document.getElementById('stepContainer');
+    container.innerHTML = `
+      <div class="step-header">
+        <div class="step-icon">${icon(s.icon)}</div>
+        <div class="step-h">
+          <div class="crumb">${s.phase} · Step ${i + 1}</div>
+          <h1>${s.title}</h1>
+          <div class="sub">${s.sub}</div>
+        </div>
+      </div>
+      ${s.render()}
+    `;
+    // Bind cfg inputs (handles checkboxes + value inputs)
+    container.querySelectorAll('[data-cfg]').forEach(input => {
+      const k = input.dataset.cfg;
+      const saved = getState()[k];
+      if (input.type === 'checkbox') {
+        input.checked = !!saved;
+        input.addEventListener('change', () => {
+          mergeState({ [k]: input.checked });
+        });
+      } else {
+        if (saved !== undefined && saved !== '') input.value = saved;
+        input.addEventListener('input', () => {
+          mergeState({ [k]: input.value });
+        });
+      }
+    });
+    document.getElementById('curNum').textContent = i + 1;
+    document.getElementById('totalNum').textContent = STEPS.length;
+    document.getElementById('prevBtn').disabled = i === 0;
+    document.getElementById('nextBtn').disabled = i === STEPS.length - 1;
+    document.getElementById('nextBtn').innerHTML = (i === STEPS.length - 1)
+      ? 'All done <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>'
+      : 'Mark done & continue <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>';
+  }
+
+  function updateProgress() {
+    let done = 0;
+    STEPS.forEach((_, i) => { if (isStepDone(i)) done++; });
+    const pct = Math.round(done / STEPS.length * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+  }
+
+  function goToStep(i) {
+    if (i < 0 || i >= STEPS.length) return;
+    currentStep = i;
+    mergeState({ __currentStep: i });
+    renderStepper();
+    renderStep(i);
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.getElementById('prevBtn').onclick = () => goToStep(currentStep - 1);
+  document.getElementById('nextBtn').onclick = () => {
+    markStepCompleteByContinue(currentStep);
+    if (currentStep < STEPS.length - 1) goToStep(currentStep + 1);
+    else { renderStepper(); renderStep(currentStep); updateProgress(); }
+  };
+
+  // ============================================================
+  // Copy announcement
+  // ============================================================
+  function copyAnnouncement() {
+    const text = document.getElementById('announceText').innerText;
+    navigator.clipboard.writeText(text);
+    const btn = event.target;
+    const oldText = btn.textContent;
+    btn.textContent = 'Copied ✓';
+    setTimeout(() => btn.textContent = oldText, 1400);
+  }
+
+  // ============================================================
+  // Property strip bindings
+  // ============================================================
+  const propInputs = ['propName', 'propState', 'propPMS', 'propCustomer'];
+  function loadPropertyStrip() {
+    // Use a global "last property" pointer so the page restores last context
+    const last = JSON.parse(localStorage.getItem('usd-wizard::last') || '{}');
+    propInputs.forEach(id => {
+      const el = document.getElementById(id);
+      if (last[id] !== undefined) el.value = last[id];
+    });
+  }
+  function savePropertyStrip() {
+    const last = {};
+    propInputs.forEach(id => last[id] = document.getElementById(id).value);
+    localStorage.setItem('usd-wizard::last', JSON.stringify(last));
+    flashSaved();
+  }
+  propInputs.forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      savePropertyStrip();
+      // re-render to pick up state changes (refund window etc)
+      renderStep(currentStep);
+      renderStepper();
+      updateProgress();
+    });
+  });
+
+  // ============================================================
+  // Boot
+  // ============================================================
+  loadPropertyStrip();
+  const saved = getState();
+  if (typeof saved.__currentStep === 'number') currentStep = saved.__currentStep;
+  renderStepper();
+  renderStep(currentStep);
+  updateProgress();
+</script>
+</body>
+</html>
